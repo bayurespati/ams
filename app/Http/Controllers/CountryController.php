@@ -45,7 +45,7 @@ class CountryController extends Controller
     }
 
     //Delete data
-    public function destroy(country $country)
+    public function destroy(Country $country)
     {
         $country->delete();
 

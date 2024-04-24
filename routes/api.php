@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\ItemTypeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,4 +21,12 @@ Route::group(['prefix' => 'countries',], function () {
     Route::POST('', [CountryController::class, 'store']);
     Route::PATCH('{country}', [CountryController::class, 'update']);
     Route::DELETE('{country}', [CountryController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'item_types',], function () {
+    Route::GET('{item_type}', [ItemTypeController::class, 'getById']);
+    Route::GET('', [ItemTypeController::class, 'getAll']);
+    Route::POST('', [ItemTypeController::class, 'store']);
+    Route::PATCH('{item_type}', [ItemTypeController::class, 'update']);
+    Route::DELETE('{item_type}', [ItemTypeController::class, 'destroy']);
 });
