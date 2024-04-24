@@ -22,7 +22,7 @@ class UpdateCityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama' => 'required|unique:cities,nama' . $this->id,
+            'name' => 'required|unique:city,name,' . $this->city->id,
         ];
     }
 }
