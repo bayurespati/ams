@@ -3,6 +3,7 @@
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\ItemTypeController;
+use App\Http\Controllers\ItemVarietyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,4 +30,12 @@ Route::group(['prefix' => 'item_types',], function () {
     Route::POST('', [ItemTypeController::class, 'store']);
     Route::PATCH('{item_type}', [ItemTypeController::class, 'update']);
     Route::DELETE('{item_type}', [ItemTypeController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'item_varieties',], function () {
+    Route::GET('{item_variety}', [ItemVarietyController::class, 'getById']);
+    Route::GET('', [ItemVarietyController::class, 'getAll']);
+    Route::POST('', [ItemVarietyController::class, 'store']);
+    Route::PATCH('{item_variety}', [ItemVarietyController::class, 'update']);
+    Route::DELETE('{item_variety}', [ItemVarietyController::class, 'destroy']);
 });
