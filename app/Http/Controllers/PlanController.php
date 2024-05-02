@@ -45,8 +45,13 @@ class PlanController extends Controller
     //Update data
     public function update(UpdatePlanRequest $request, Plan $plan)
     {
-        $plan->name = $request->name;
-        $plan->alias = $request->alias;
+        $plan->nama_barang = $request->nama_barang;
+        $plan->jenis_barang_id = $request->jenis_barang_id;
+        $plan->tipe_barang_id = $request->tipe_barang_id;
+        $plan->jumlah_barang = $request->jumlah_barang;
+        $plan->no_spk = $request->no_spk;
+        $plan->no_prpo = $request->no_prpo;
+        $plan->is_lop = $request->is_lop;
         $plan->save();
 
         return response()->json(['data' => $plan, 'message' => 'Success update data plan'], 200);
