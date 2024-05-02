@@ -4,6 +4,7 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\ItemTypeController;
 use App\Http\Controllers\ItemVarietyController;
+use App\Http\Controllers\PlanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,4 +39,11 @@ Route::group(['prefix' => 'item_varieties',], function () {
     Route::POST('', [ItemVarietyController::class, 'store']);
     Route::PATCH('{item_variety}', [ItemVarietyController::class, 'update']);
     Route::DELETE('{item_variety}', [ItemVarietyController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'plans',], function () {
+    Route::GET('{plan}', [PlanController::class, 'getById']);
+    Route::GET('', [PlanController::class, 'getAll']);
+    Route::POST('', [PlanController::class, 'store']);
+    Route::DELETE('{plan}', [PlanController::class, 'destroy']);
 });
