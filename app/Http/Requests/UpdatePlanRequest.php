@@ -11,7 +11,7 @@ class UpdatePlanRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,13 @@ class UpdatePlanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nama_barang' => 'required|unique:plan,nama_barang,' . $this->plan->id,
+            'jenis_barang_id' => 'required',
+            'tipe_barang_id' => 'required',
+            'jumlah_barang' => 'required',
+            'no_spk' => 'required',
+            'no_prpo' => 'required',
+            'is_lop' => 'required',
         ];
     }
 }

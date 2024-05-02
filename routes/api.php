@@ -45,5 +45,6 @@ Route::group(['prefix' => 'plans',], function () {
     Route::GET('{plan}', [PlanController::class, 'getById']);
     Route::GET('', [PlanController::class, 'getAll']);
     Route::POST('', [PlanController::class, 'store']);
+    Route::PATCH('{plan}', [PlanController::class, 'update']);
     Route::DELETE('{plan}', [PlanController::class, 'destroy']);
 });
