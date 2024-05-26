@@ -19,10 +19,10 @@ class UpdateCountryRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules($model): array
     {
         return [
-            'name' => 'required|unique:country,name,' . $this->country->id,
+            'nama' => 'required|unique:country,nama,' . $model->id,
         ];
     }
 }

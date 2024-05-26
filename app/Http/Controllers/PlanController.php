@@ -11,8 +11,11 @@ use Illuminate\Http\Request;
 class PlanController extends Controller
 {
     //Get By id
-    public function getById(Request $request, Plan $plan)
+    public function getById(Request $request)
     {
+        $plan = Plan::find($request->id);
+        if (!$plan)
+            return response()->json(['data' => $plan, 'message' => 'Data not found'], 404);
         return response()->json(['data' => $plan, 'message' => 'Success get data plan'], 200);
     }
 
@@ -43,8 +46,12 @@ class PlanController extends Controller
     }
 
     //Update data
-    public function update(UpdatePlanRequest $request, Plan $plan)
+    public function update(Request $request)
     {
+        $plan = Plan::find($request->id);
+        if (!$plan)
+            return response()->json(['data' => $plan, 'message' => 'Data not found'], 404);
+        $request->validate((new UpdatePlanRequest())->rules($plan));
         $plan->nama_barang = $request->nama_barang;
         $plan->jenis_barang_id = $request->jenis_barang_id;
         $plan->tipe_barang_id = $request->tipe_barang_id;

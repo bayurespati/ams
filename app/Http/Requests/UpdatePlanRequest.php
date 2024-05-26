@@ -19,10 +19,10 @@ class UpdatePlanRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules($model): array
     {
         return [
-            'nama_barang' => 'required|unique:plan,nama_barang,' . $this->plan->id,
+            'nama_barang' => 'required|unique:plan,nama_barang,' . $model->id,
             'jenis_barang_id' => 'required',
             'tipe_barang_id' => 'required',
             'jumlah_barang' => 'required',

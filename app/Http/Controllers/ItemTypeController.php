@@ -10,8 +10,11 @@ use Illuminate\Http\Request;
 class ItemTypeController extends Controller
 {
     //Get By id
-    public function getById(Request $request, ItemType $item_type)
+    public function getById(Request $request)
     {
+        $item_type = ItemType::find($request->id);
+        if (!$item_type)
+            return response()->json(['data' => $item_type, 'message' => 'Data not found'], 404);
         return response()->json(['data' => $item_type, 'message' => 'Success get data item type'], 200);
     }
 
@@ -27,16 +30,20 @@ class ItemTypeController extends Controller
     public function store(StoreItemTypeRequest $request)
     {
         $item_type = new ItemType();
-        $item_type->name = $request->name;
+        $item_type->nama = $request->nama;
         $item_type->save();
 
         return response()->json(['data' => $item_type, 'message' => 'Success store data item type'], 200);
     }
 
     //Update data
-    public function update(UpdateItemTypeRequest $request, ItemType $item_type)
+    public function update(Request $request)
     {
-        $item_type->name = $request->name;
+        $item_type = ItemType::find($request->id);
+        if (!$item_type)
+            return response()->json(['data' => $item_type, 'message' => 'Data not found'], 404);
+        $request->validate((new UpdateItemTypeRequest())->rules($item_type));
+        $item_type->nama = $request->nama;
         $item_type->save();
 
         return response()->json(['data' => $item_type, 'message' => 'Success update data item type'], 200);

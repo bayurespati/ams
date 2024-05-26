@@ -22,7 +22,7 @@ class StoreItemVarietyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:item_variety,name'
+            'nama' => 'required|unique:item_variety,nama'
         ];
     }
 }

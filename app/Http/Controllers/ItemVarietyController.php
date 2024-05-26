@@ -10,33 +10,40 @@ use Illuminate\Http\Request;
 class ItemVarietyController extends Controller
 {
     //Get By id
-    public function getById(Request $request, ItemVariety $item_variety)
+    public function getById(Request $request)
     {
+        $item_variety = ItemVariety::find($request->id);
+        if (!$item_variety)
+            return response()->json(['data' => $item_variety, 'message' => 'Data not found'], 404);
         return response()->json(['data' => $item_variety, 'message' => 'Success get data item variety'], 200);
     }
 
     //Get All
     public function getAll()
     {
-        $item_types = ItemVariety::all();
+        $item_variety = ItemVariety::all();
 
-        return response()->json(['data' => $item_types, 'message' => 'Success get data item varieties'], 200);
+        return response()->json(['data' => $item_variety, 'message' => 'Success get data item varieties'], 200);
     }
 
     //Store data
     public function store(StoreItemVarietyRequest $request)
     {
-        $item_type = new ItemVariety();
-        $item_type->name = $request->name;
-        $item_type->save();
+        $item_variety = new ItemVariety();
+        $item_variety->nama = $request->nama;
+        $item_variety->save();
 
-        return response()->json(['data' => $item_type, 'message' => 'Success store data item variety'], 200);
+        return response()->json(['data' => $item_variety, 'message' => 'Success store data item variety'], 200);
     }
 
     //Update data
-    public function update(UpdateItemVarietyRequest $request, ItemVariety $item_variety)
+    public function update(Request $request)
     {
-        $item_variety->name = $request->name;
+        $item_variety = ItemVariety::find($request->id);
+        if (!$item_variety)
+            return response()->json(['data' => $item_variety, 'message' => 'Data not found'], 404);
+        $request->validate((new UpdateItemVarietyRequest())->rules($item_variety));
+        $item_variety->nama = $request->nama;
         $item_variety->save();
 
         return response()->json(['data' => $item_variety, 'message' => 'Success update data item variety'], 200);

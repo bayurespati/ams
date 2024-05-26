@@ -22,7 +22,7 @@ class StoreCountryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:country,name'
+            'nama' => 'required|unique:country,nama'
         ];
     }
 }

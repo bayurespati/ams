@@ -19,10 +19,10 @@ class UpdateCityRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules($model): array
     {
         return [
-            'name' => 'required|unique:city,name,' . $this->city->id,
+            'nama' => 'required|unique:city,nama,' . $model->id,
         ];
     }
 }

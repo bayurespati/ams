@@ -10,8 +10,12 @@ use Illuminate\Http\Request;
 class CountryController extends Controller
 {
     //Get By id
-    public function getById(Request $request, Country $country)
+    public function getById(Request $request)
     {
+        $country = Country::find($request->id);
+        if (!$country)
+            return response()->json(['data' => $country, 'message' => 'Data not found'], 404);
+
         return response()->json(['data' => $country, 'message' => 'Success get data country'], 200);
     }
 
@@ -27,7 +31,7 @@ class CountryController extends Controller
     public function store(StoreCountryRequest $request)
     {
         $country = new Country();
-        $country->name = $request->name;
+        $country->nama = $request->nama;
         $country->alias = $request->alias;
         $country->save();
 
@@ -35,9 +39,13 @@ class CountryController extends Controller
     }
 
     //Update data
-    public function update(UpdateCountryRequest $request, Country $country)
+    public function update(Request $request)
     {
-        $country->name = $request->name;
+        $country = Country::find($request->id);
+        if (!$country)
+            return response()->json(['data' => $country, 'message' => 'Data not found'], 404);
+        $request->validate((new UpdateCountryRequest())->rules($country));
+        $country->nama = $request->nama;
         $country->alias = $request->alias;
         $country->save();
 
@@ -45,10 +53,13 @@ class CountryController extends Controller
     }
 
     //Delete data
-    public function destroy(Country $country)
+    public function destroy(Request $request)
     {
-        $country->delete();
+        $country = Country::find($request->id);
+        if (!$country)
+            return response()->json(['data' => $country, 'message' => 'Data not found'], 404);
 
+        $country->delete();
         return response()->json(['message' => 'Success delete data country'], 200);
     }
 }

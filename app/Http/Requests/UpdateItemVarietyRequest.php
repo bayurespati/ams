@@ -19,10 +19,10 @@ class UpdateItemVarietyRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules($model): array
     {
         return [
-            'name' => 'required|unique:item_variety,name,' . $this->item_variety->id,
+            'nama' => 'required|unique:item_variety,nama,' . $model->id,
         ];
     }
 }

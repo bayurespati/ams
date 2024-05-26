@@ -30,8 +30,6 @@ class StorePlanRequest extends FormRequest
             'no_spk' => 'required',
             'no_prpo' => 'required',
             'is_lop' => 'required',
-            'file_spk' => 'required',
-            'file_prpo' => 'required',
         ];
     }
 }

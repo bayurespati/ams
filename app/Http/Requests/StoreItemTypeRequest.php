@@ -22,7 +22,7 @@ class StoreItemTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:item_type,name'
+            'nama' => 'required|unique:item_type,nama'
         ];
     }
 }

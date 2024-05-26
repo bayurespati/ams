@@ -10,8 +10,11 @@ use Illuminate\Http\Request;
 class CityController extends Controller
 {
     //Get By id
-    public function getById(Request $request, City $city)
+    public function getById(Request $request)
     {
+        $city = City::find($request->id);
+        if (!$city)
+            return response()->json(['data' => $city, 'message' => 'Data not found'], 404);
         return response()->json(['data' => $city, 'message' => 'Success get data city'], 200);
     }
 
@@ -27,7 +30,7 @@ class CityController extends Controller
     public function store(StoreCityRequest $request)
     {
         $city = new City();
-        $city->name = $request->name;
+        $city->nama = $request->nama;
         $city->alias = $request->alias;
         $city->save();
 
@@ -35,9 +38,13 @@ class CityController extends Controller
     }
 
     //Update data
-    public function update(UpdateCityRequest $request, City $city)
+    public function update(Request $request)
     {
-        $city->name = $request->name;
+        $city = City::find($request->id);
+        if (!$city)
+            return response()->json(['data' => $city, 'message' => 'Data not found'], 404);
+        $request->validate((new UpdateCityRequest())->rules($city));
+        $city->nama = $request->nama;
         $city->alias = $request->alias;
         $city->save();
 
