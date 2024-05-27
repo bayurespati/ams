@@ -31,6 +31,7 @@ class PlanController extends Controller
     public function store(StorePlanRequest $request)
     {
         $plan = new Plan();
+        $plan->project_id = $request->project_id;
         $plan->nama_barang = $request->nama_barang;
         $plan->jenis_barang_id = $request->jenis_barang_id;
         $plan->tipe_barang_id = $request->tipe_barang_id;
@@ -52,6 +53,7 @@ class PlanController extends Controller
         if (!$plan)
             return response()->json(['data' => $plan, 'message' => 'Data not found'], 404);
         $request->validate((new UpdatePlanRequest())->rules($plan));
+        $plan->project_id = $request->project_id;
         $plan->nama_barang = $request->nama_barang;
         $plan->jenis_barang_id = $request->jenis_barang_id;
         $plan->tipe_barang_id = $request->tipe_barang_id;

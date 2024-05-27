@@ -24,6 +24,7 @@ class StorePlanRequest extends FormRequest
     {
         return [
             'nama_barang' => 'required|unique:plan,nama_barang',
+            'project_id' => 'required',
             'jenis_barang_id' => 'required',
             'tipe_barang_id' => 'required',
             'jumlah_barang' => 'required',

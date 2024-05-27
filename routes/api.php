@@ -5,12 +5,12 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\ItemTypeController;
 use App\Http\Controllers\ItemVarietyController;
 use App\Http\Controllers\PlanController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\POController;
 use Illuminate\Support\Facades\Route;
 
 
 Route::group(['prefix' => 'cities',], function () {
-    Route::GET('{city}', [CityController::class, 'getById']);
+    Route::GET('/detail', [CityController::class, 'getById']);
     Route::GET('', [CityController::class, 'getAll']);
     Route::POST('', [CityController::class, 'store']);
     Route::PATCH('', [CityController::class, 'update']);
@@ -18,7 +18,7 @@ Route::group(['prefix' => 'cities',], function () {
 });
 
 Route::group(['prefix' => 'countries',], function () {
-    Route::GET('{country}', [CountryController::class, 'getById']);
+    Route::GET('/detail', [CountryController::class, 'getById']);
     Route::GET('', [CountryController::class, 'getAll']);
     Route::POST('', [CountryController::class, 'store']);
     Route::PATCH('', [CountryController::class, 'update']);
@@ -26,7 +26,7 @@ Route::group(['prefix' => 'countries',], function () {
 });
 
 Route::group(['prefix' => 'item_types',], function () {
-    Route::GET('{item_type}', [ItemTypeController::class, 'getById']);
+    Route::GET('/detail', [ItemTypeController::class, 'getById']);
     Route::GET('', [ItemTypeController::class, 'getAll']);
     Route::POST('', [ItemTypeController::class, 'store']);
     Route::PATCH('', [ItemTypeController::class, 'update']);
@@ -34,7 +34,7 @@ Route::group(['prefix' => 'item_types',], function () {
 });
 
 Route::group(['prefix' => 'item_varieties',], function () {
-    Route::GET('{item_variety}', [ItemVarietyController::class, 'getById']);
+    Route::GET('/detail', [ItemVarietyController::class, 'getById']);
     Route::GET('', [ItemVarietyController::class, 'getAll']);
     Route::POST('', [ItemVarietyController::class, 'store']);
     Route::PATCH('', [ItemVarietyController::class, 'update']);
@@ -42,9 +42,17 @@ Route::group(['prefix' => 'item_varieties',], function () {
 });
 
 Route::group(['prefix' => 'plans',], function () {
-    Route::GET('{plan}', [PlanController::class, 'getById']);
+    Route::GET('/detail', [PlanController::class, 'getById']);
     Route::GET('', [PlanController::class, 'getAll']);
     Route::POST('', [PlanController::class, 'store']);
     Route::PATCH('', [PlanController::class, 'update']);
     Route::DELETE('{plan}', [PlanController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'po',], function () {
+    Route::GET('/detail', [POController::class, 'getById']);
+    Route::GET('', [POController::class, 'getAll']);
+    Route::POST('', [POController::class, 'store']);
+    Route::PATCH('', [POController::class, 'update']);
+    Route::DELETE('{plan}', [POController::class, 'destroy']);
 });

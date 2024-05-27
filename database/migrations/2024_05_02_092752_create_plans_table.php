@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('plan', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->integer('project_id');
             $table->integer('jenis_barang_id');
             $table->integer('tipe_barang_id');
             $table->string('nama_barang');

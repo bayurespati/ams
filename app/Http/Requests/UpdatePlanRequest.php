@@ -22,6 +22,7 @@ class UpdatePlanRequest extends FormRequest
     public function rules($model): array
     {
         return [
+            'project_id' => 'required',
             'nama_barang' => 'required|unique:plan,nama_barang,' . $model->id,
             'jenis_barang_id' => 'required',
             'tipe_barang_id' => 'required',
