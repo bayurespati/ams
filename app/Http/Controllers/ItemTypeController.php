@@ -56,4 +56,14 @@ class ItemTypeController extends Controller
 
         return response()->json(['message' => 'Success delete data item type'], 200);
     }
+
+    //Restore data softdelete
+    public function restore(Request $request)
+    {
+        $model = ItemType::withTrashed()->find($request->id);
+        if (!$model)
+            return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
+        $model = ItemType::withTrashed()->find($request->id)->restore();
+        return response()->json(['data' => $model, 'message' => 'Success restore data po'], 200);
+    }
 }

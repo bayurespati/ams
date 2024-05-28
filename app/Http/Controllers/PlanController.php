@@ -22,9 +22,8 @@ class PlanController extends Controller
     //Get All
     public function getAll()
     {
-        $cities = Plan::all();
-
-        return response()->json(['data' => $cities, 'message' => 'Success get data plans'], 200);
+        $plan = Plan::all();
+        return response()->json(['data' => $plan, 'message' => 'Success get data plans'], 200);
     }
 
     //Store data
@@ -36,10 +35,8 @@ class PlanController extends Controller
         $plan->jenis_barang_id = $request->jenis_barang_id;
         $plan->tipe_barang_id = $request->tipe_barang_id;
         $plan->jumlah_barang = $request->jumlah_barang;
-        $plan->no_spk = $request->no_spk;
         $plan->no_prpo = $request->no_prpo;
         $plan->is_lop = $request->is_lop;
-        $plan->file_spk = Storage::disk('public')->put('plan', $request->file_spk);
         $plan->file_prpo = Storage::disk('public')->put('plan', $request->file_prpo);
         $plan->save();
 
@@ -58,8 +55,9 @@ class PlanController extends Controller
         $plan->jenis_barang_id = $request->jenis_barang_id;
         $plan->tipe_barang_id = $request->tipe_barang_id;
         $plan->jumlah_barang = $request->jumlah_barang;
-        $plan->no_spk = $request->no_spk;
         $plan->no_prpo = $request->no_prpo;
+        if ($request->file_prpo)
+            $plan->file_prpo = Storage::disk('public')->put('plan', $request->file_prpo);
         $plan->is_lop = $request->is_lop;
         $plan->save();
 
@@ -72,5 +70,15 @@ class PlanController extends Controller
         $plan->delete();
 
         return response()->json(['message' => 'Success delete data plan'], 200);
+    }
+
+    //Restore data softdelete
+    public function restore(Request $request)
+    {
+        $model = Plan::withTrashed()->find($request->id);
+        if (!$model)
+            return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
+        $model = Plan::withTrashed()->find($request->id)->restore();
+        return response()->json(['data' => $model, 'message' => 'Success restore data po'], 200);
     }
 }

@@ -20,9 +20,7 @@ return new class extends Migration
             $table->integer('jumlah_barang');
             $table->boolean('is_lop');
             $table->string('file_prpo');
-            $table->string('file_spk');
             $table->string('no_prpo');
-            $table->string('no_spk');
             $table->timestamps();
             $table->softDeletes();
         });

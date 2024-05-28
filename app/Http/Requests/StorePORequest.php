@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class StorePlanRequest extends FormRequest
+class StorePORequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,13 +22,13 @@ class StorePlanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama_barang' => 'required|unique:plan,nama_barang',
-            'project_id' => 'required',
-            'jenis_barang_id' => 'required',
-            'tipe_barang_id' => 'required',
-            'jumlah_barang' => 'required',
-            'no_prpo' => 'required',
-            'is_lop' => 'required',
+            'plan_id' => 'required',
+            'nama_pekerjaan' => 'required|unique:po,nama_pekerjaan',
+            'file_boq' => 'required',
+            'nilai_pengadaan' => 'required',
+            'tanggal_delivery' => 'required',
+            'akun' => 'required',
+            'cost_center' => 'required',
         ];
     }
 }

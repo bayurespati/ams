@@ -56,4 +56,14 @@ class ItemVarietyController extends Controller
 
         return response()->json(['message' => 'Success delete data item variety'], 200);
     }
+
+    //Restore data softdelete
+    public function restore(Request $request)
+    {
+        $model = ItemVariety::withTrashed()->find($request->id);
+        if (!$model)
+            return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
+        $model = ItemVariety::withTrashed()->find($request->id)->restore();
+        return response()->json(['data' => $model, 'message' => 'Success restore data po'], 200);
+    }
 }
