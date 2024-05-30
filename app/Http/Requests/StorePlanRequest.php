@@ -23,7 +23,8 @@ class StorePlanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama_barang' => 'required|unique:plan,nama_barang',
+            'judul' => 'required|unique:plan,judul',
+            'nama_barang' => 'required',
             'project_id' => 'required',
             'jenis_barang_id' => 'required',
             'tipe_barang_id' => 'required',

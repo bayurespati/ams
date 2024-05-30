@@ -31,6 +31,7 @@ class PlanController extends Controller
     {
         $plan = new Plan();
         $plan->project_id = $request->project_id;
+        $plan->judul = $request->judul;
         $plan->nama_barang = $request->nama_barang;
         $plan->jenis_barang_id = $request->jenis_barang_id;
         $plan->tipe_barang_id = $request->tipe_barang_id;
@@ -51,6 +52,7 @@ class PlanController extends Controller
             return response()->json(['data' => $plan, 'message' => 'Data not found'], 404);
         $request->validate((new UpdatePlanRequest())->rules($plan));
         $plan->project_id = $request->project_id;
+        $plan->judul = $request->judul;
         $plan->nama_barang = $request->nama_barang;
         $plan->jenis_barang_id = $request->jenis_barang_id;
         $plan->tipe_barang_id = $request->tipe_barang_id;
@@ -79,6 +81,6 @@ class PlanController extends Controller
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
         $model = Plan::withTrashed()->find($request->id)->restore();
-        return response()->json(['data' => $model, 'message' => 'Success restore data po'], 200);
+        return response()->json(['data' => $model, 'message' => 'Success restore data plan'], 200);
     }
 }
