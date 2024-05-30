@@ -71,6 +71,6 @@ class CountryController extends Controller
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
         $model = Country::withTrashed()->find($request->id)->restore();
-        return response()->json(['data' => $model, 'message' => 'Success restore data po'], 200);
+        return response()->json(['data' => $model, 'message' => 'Success restore data country'], 200);
     }
 }

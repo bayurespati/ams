@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('po', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('plan_id');
-            $table->string('nama_pekerjaan');
-            $table->string('no_po_spk_pks')->nullable();
+            $table->string('plan_id', 50);
+            $table->string('nama_pekerjaan', 100);
+            $table->string('no_po_spk_pks', 50)->nullable();
             $table->date('tanggal_po_spk_pks')->nullable();
             $table->string('file_po_spk_pks')->nullable();
             $table->string('file_boq')->nullable();
             $table->bigInteger('nilai_pengadaan');
             $table->date('tanggal_delivery');
-            $table->string('akun');
-            $table->string('cost_center');
+            $table->string('akun', 50);
+            $table->string('cost_center', 50);
             $table->timestamps();
             $table->softDeletes();
         });

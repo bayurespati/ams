@@ -64,6 +64,6 @@ class ItemVarietyController extends Controller
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
         $model = ItemVariety::withTrashed()->find($request->id)->restore();
-        return response()->json(['data' => $model, 'message' => 'Success restore data po'], 200);
+        return response()->json(['data' => $model, 'message' => 'Success restore data item variety'], 200);
     }
 }

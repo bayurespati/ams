@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('country', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string("nama")->unique();
-            $table->string("alias")->unique();
+            $table->string("nama", 50)->unique();
+            $table->string("alias", 50)->unique();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -66,6 +66,6 @@ class CityController extends Controller
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
         $model = City::withTrashed()->find($request->id)->restore();
-        return response()->json(['data' => $model, 'message' => 'Success restore data po'], 200);
+        return response()->json(['data' => $model, 'message' => 'Success restore data city'], 200);
     }
 }

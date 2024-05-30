@@ -11,7 +11,7 @@ class UpdateDoInRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -19,10 +19,16 @@ class UpdateDoInRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules($model): array
     {
         return [
-            //
+            'po_id' => 'required',
+            'no_do' => 'required|unique:do_in,no_do,' . $model->id,
+            'lokasi_gudang' => 'required',
+            'owner_id' => 'required',
+            'owner_type' => 'required',
+            'tanggal_masuk' => 'required',
+            'no_gr' => 'required',
         ];
     }
 }

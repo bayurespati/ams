@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\DoInController;
 use App\Http\Controllers\ItemTypeController;
 use App\Http\Controllers\ItemVarietyController;
 use App\Http\Controllers\PlanController;
@@ -61,4 +62,13 @@ Route::group(['prefix' => 'po',], function () {
     Route::PATCH('', [POController::class, 'update']);
     Route::PATCH('/restore', [POController::class, 'restore']);
     Route::DELETE('{po}', [POController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'do-in',], function () {
+    Route::GET('/detail', [DoInController::class, 'getById']);
+    Route::GET('', [DoInController::class, 'getAll']);
+    Route::POST('', [DoInController::class, 'store']);
+    Route::PATCH('', [DoInController::class, 'update']);
+    Route::PATCH('/restore', [DoInController::class, 'restore']);
+    Route::DELETE('{do_in}', [DoInController::class, 'destroy']);
 });

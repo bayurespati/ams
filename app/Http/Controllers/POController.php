@@ -31,6 +31,7 @@ class POController extends Controller
     //Store data
     public function store(StorePORequest $request)
     {
+        //check plan id before store data po
         $plan = Plan::find($request->plan_id);
         if (!$plan)
             return response()->json(['message' => 'Data plan not found'], 404);
@@ -54,12 +55,14 @@ class POController extends Controller
     //Update data
     public function update(Request $request)
     {
+        //check plan id before update data po
         $plan = Plan::find($request->plan_id);
         if (!$plan)
             return response()->json(['message' => 'Data plan not found'], 404);
         $po = PO::find($request->id);
         if (!$po)
             return response()->json(['data' => $po, 'message' => 'Data not found'], 404);
+        //validate data
         $request->validate((new UpdatePORequest())->rules($po));
         $po->plan_id = $request->plan_id;
         $po->nama_pekerjaan = $request->nama_pekerjaan;

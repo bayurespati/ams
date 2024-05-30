@@ -11,7 +11,7 @@ class StoreDoInRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,14 @@ class StoreDoInRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'po_id' => 'required',
+            'no_do' => 'required|unique:do_in,no_do',
+            'lokasi_gudang' => 'required',
+            'owner_id' => 'required',
+            'owner_type' => 'required',
+            'tanggal_masuk' => 'required',
+            'no_gr' => 'required',
+            'file_evidence' => 'required'
         ];
     }
 }
