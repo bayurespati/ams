@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('plan', function (Blueprint $table) {
+        Schema::create('do_in', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->integer('project_id');
-            $table->string('jenis_barang_id');
-            $table->string('tipe_barang_id');
-            $table->string('nama_barang');
-            $table->integer('jumlah_barang');
-            $table->boolean('is_lop');
-            $table->string('file_prpo');
-            $table->string('no_prpo');
+            $table->string('po_id', 50);
+            $table->string('no_do', 50)->unique();
+            $table->string('lokasi_gudang');
+            $table->string('owner_id', 50);
+            $table->string('owner_type', 20);
+            $table->string('file_evidence', 100);
+            $table->text('keterangan');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('plan');
+        Schema::dropIfExists('do_ins');
     }
 };
