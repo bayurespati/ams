@@ -28,7 +28,6 @@ class UpdatePlanRequest extends FormRequest
             'jenis_barang_id' => 'required',
             'tipe_barang_id' => 'required',
             'jumlah_barang' => 'required',
-            'no_spk' => 'required',
             'no_prpo' => 'required',
             'is_lop' => 'required',
         ];
