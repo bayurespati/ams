@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class ItemDoIn extends Model
 {
     use HasFactory;
+
+    protected $table = 'item_do_in';
+
+    protected $guarded = [];
 }

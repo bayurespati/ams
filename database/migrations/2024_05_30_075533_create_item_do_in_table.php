@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('item_do_in', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->string('do_in_id');
             $table->string('sn')->nullable();
             $table->integer('jumlah');

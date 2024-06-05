@@ -68,6 +68,8 @@ Route::group(['prefix' => 'do-in',], function () {
     Route::GET('/detail', [DoInController::class, 'getById']);
     Route::GET('', [DoInController::class, 'getAll']);
     Route::POST('', [DoInController::class, 'store']);
+    Route::POST('/item-add-upload', [DoInController::class, 'uploadItem']);
+    Route::POST('/item-add', [DoInController::class, 'addItem']);
     Route::PATCH('', [DoInController::class, 'update']);
     Route::PATCH('/restore', [DoInController::class, 'restore']);
     Route::DELETE('{do_in}', [DoInController::class, 'destroy']);

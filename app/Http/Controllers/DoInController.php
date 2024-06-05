@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDoInRequest;
 use App\Http\Requests\UpdateDoInRequest;
+use App\Imports\AddItemDoInImport;
 use App\Models\DoIn;
+use App\Models\ItemDoIn;
 use App\Models\PO;
+use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpParser\Node\Stmt\TryCatch;
 
 class DoInController extends Controller
 {
@@ -47,6 +52,45 @@ class DoInController extends Controller
         $do_in->save();
 
         return response()->json(['data' => $do_in, 'message' => 'Success store data do in'], 200);
+    }
+
+    //Add item do in with upload
+    public function uploadItem(Request $request)
+    {
+        $do = DoIn::find($request->do_in_id);
+        if (!$do)
+            return response()->json(['message' => 'Data do in not found'], 404);
+
+        try {
+
+            $file = $request->file('file_item');
+            Excel::import(new AddItemDoInImport($request->do_in_id), $file, \Maatwebsite\Excel\Excel::XLSX);
+
+            return response()->json(['data' => $do, 'message' => 'Success add item on do in'], 200);
+        } catch (Exception $e) {
+            return response()->json(['data' => $do, 'message' => $e], 500);
+        }
+    }
+
+    //Add item do in on json
+    public function addItem(Request $request)
+    {
+        $do = DoIn::find($request->do_in_id);
+        if (!$do)
+            return response()->json(['message' => 'Data do in not found'], 404);
+
+        try {
+            foreach ($request->items as $item) {
+                $itemDoIn = new ItemDoIn();
+                $itemDoIn->do_in_id = $request->do_in_id;
+                $itemDoIn->sn = $item["sn"];
+                $itemDoIn->jumlah = $item["jumlah"];
+                $itemDoIn->save();
+            }
+            return response()->json(['data' => $do, 'message' => 'Success add item on do in'], 200);
+        } catch (Exception $e) {
+            return response()->json(['data' => $do, 'message' => $e], 500);
+        }
     }
 
     //Update data
