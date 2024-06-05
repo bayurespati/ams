@@ -3,6 +3,7 @@
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DoInController;
+use App\Http\Controllers\ItemDoInController;
 use App\Http\Controllers\ItemTypeController;
 use App\Http\Controllers\ItemVarietyController;
 use App\Http\Controllers\PlanController;
@@ -16,7 +17,7 @@ Route::group(['prefix' => 'cities',], function () {
     Route::POST('', [CityController::class, 'store']);
     Route::PATCH('', [CityController::class, 'update']);
     Route::PATCH('/restore', [CityController::class, 'restore']);
-    Route::DELETE('{city}', [CityController::class, 'destroy']);
+    Route::DELETE('', [CityController::class, 'destroy']);
 });
 
 Route::group(['prefix' => 'countries',], function () {
@@ -25,7 +26,7 @@ Route::group(['prefix' => 'countries',], function () {
     Route::POST('', [CountryController::class, 'store']);
     Route::PATCH('', [CountryController::class, 'update']);
     Route::PATCH('/restore', [CountryController::class, 'restore']);
-    Route::DELETE('{country}', [CountryController::class, 'destroy']);
+    Route::DELETE('', [CountryController::class, 'destroy']);
 });
 
 Route::group(['prefix' => 'item_types',], function () {
@@ -34,7 +35,7 @@ Route::group(['prefix' => 'item_types',], function () {
     Route::POST('', [ItemTypeController::class, 'store']);
     Route::PATCH('', [ItemTypeController::class, 'update']);
     Route::PATCH('/restore', [ItemTypeController::class, 'restore']);
-    Route::DELETE('{item_type}', [ItemTypeController::class, 'destroy']);
+    Route::DELETE('', [ItemTypeController::class, 'destroy']);
 });
 
 Route::group(['prefix' => 'item_varieties',], function () {
@@ -43,7 +44,7 @@ Route::group(['prefix' => 'item_varieties',], function () {
     Route::POST('', [ItemVarietyController::class, 'store']);
     Route::PATCH('', [ItemVarietyController::class, 'update']);
     Route::PATCH('/restore', [ItemVarietyController::class, 'restore']);
-    Route::DELETE('{item_variety}', [ItemVarietyController::class, 'destroy']);
+    Route::DELETE('', [ItemVarietyController::class, 'destroy']);
 });
 
 Route::group(['prefix' => 'plans',], function () {
@@ -52,7 +53,7 @@ Route::group(['prefix' => 'plans',], function () {
     Route::POST('', [PlanController::class, 'store']);
     Route::PATCH('', [PlanController::class, 'update']);
     Route::PATCH('/restore', [PlanController::class, 'restore']);
-    Route::DELETE('{plan}', [PlanController::class, 'destroy']);
+    Route::DELETE('', [PlanController::class, 'destroy']);
 });
 
 Route::group(['prefix' => 'po',], function () {
@@ -61,16 +62,21 @@ Route::group(['prefix' => 'po',], function () {
     Route::POST('', [POController::class, 'store']);
     Route::PATCH('', [POController::class, 'update']);
     Route::PATCH('/restore', [POController::class, 'restore']);
-    Route::DELETE('{po}', [POController::class, 'destroy']);
+    Route::DELETE('', [POController::class, 'destroy']);
 });
 
 Route::group(['prefix' => 'do-in',], function () {
     Route::GET('/detail', [DoInController::class, 'getById']);
     Route::GET('', [DoInController::class, 'getAll']);
     Route::POST('', [DoInController::class, 'store']);
-    Route::POST('/item-add-upload', [DoInController::class, 'uploadItem']);
-    Route::POST('/item-add', [DoInController::class, 'addItem']);
     Route::PATCH('', [DoInController::class, 'update']);
     Route::PATCH('/restore', [DoInController::class, 'restore']);
-    Route::DELETE('{do_in}', [DoInController::class, 'destroy']);
+    Route::DELETE('', [DoInController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'item-do-in',], function () {
+    Route::POST('/upload', [ItemDoInController::class, 'uploadItem']);
+    Route::POST('', [ItemDoInController::class, 'addItem']);
+    Route::PATCH('', [ItemDoInController::class, 'update']);
+    Route::DELETE('', [ItemDoInController::class, 'destroy']);
 });

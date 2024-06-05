@@ -50,10 +50,13 @@ class ItemTypeController extends Controller
     }
 
     //Delete data
-    public function destroy(ItemType $item_type)
+    public function destroy(Request $request)
     {
-        $item_type->delete();
+        $model = ItemType::find($request->id);
+        if (!$model)
+            return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
 
+        $model->delete();
         return response()->json(['message' => 'Success delete data item type'], 200);
     }
 

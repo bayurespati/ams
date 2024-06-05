@@ -6,7 +6,7 @@ use App\Models\ItemDoIn;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 
-class AddItemDoInImport implements ToModel, WithStartRow
+class ItemDoInImport implements ToModel, WithStartRow
 {
     private $do_in_id;
 

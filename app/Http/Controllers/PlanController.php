@@ -67,10 +67,13 @@ class PlanController extends Controller
     }
 
     //Delete data
-    public function destroy(Plan $plan)
+    public function destroy(Request $request)
     {
-        $plan->delete();
+        $model = Plan::find($request->id);
+        if (!$model)
+            return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
 
+        $model->delete();
         return response()->json(['message' => 'Success delete data plan'], 200);
     }
 

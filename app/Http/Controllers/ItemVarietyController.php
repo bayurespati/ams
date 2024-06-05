@@ -50,10 +50,13 @@ class ItemVarietyController extends Controller
     }
 
     //Delete data
-    public function destroy(ItemVariety $item_variety)
+    public function destroy(Request $request)
     {
-        $item_variety->delete();
+        $model = ItemVariety::find($request->id);
+        if (!$model)
+            return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
 
+        $model->delete();
         return response()->json(['message' => 'Success delete data item variety'], 200);
     }
 

@@ -52,10 +52,13 @@ class CityController extends Controller
     }
 
     //Delete data
-    public function destroy(City $city)
+    public function destroy(Request $request)
     {
-        $city->delete();
+        $model = City::find($request->id);
+        if (!$model)
+            return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
 
+        $model->delete();
         return response()->json(['message' => 'Success delete data city'], 200);
     }
 

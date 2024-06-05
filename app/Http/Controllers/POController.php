@@ -82,9 +82,13 @@ class POController extends Controller
     }
 
     //Delete data
-    public function destroy(PO $po)
+    public function destroy(Request $request)
     {
-        $po->delete();
+        $model = PO::find($request->id);
+        if (!$model)
+            return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
+
+        $model->delete();
         return response()->json(['message' => 'Success delete data po'], 200);
     }
 

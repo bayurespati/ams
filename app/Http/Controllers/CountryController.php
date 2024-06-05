@@ -56,11 +56,11 @@ class CountryController extends Controller
     //Delete data
     public function destroy(Request $request)
     {
-        $country = Country::find($request->id);
-        if (!$country)
-            return response()->json(['data' => $country, 'message' => 'Data not found'], 404);
+        $model = Country::find($request->id);
+        if (!$model)
+            return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
 
-        $country->delete();
+        $model->delete();
         return response()->json(['message' => 'Success delete data country'], 200);
     }
 
