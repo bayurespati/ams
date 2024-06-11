@@ -26,6 +26,14 @@ class ItemVarietyController extends Controller
         return response()->json(['data' => $item_variety, 'message' => 'Success get data item varieties'], 200);
     }
 
+    //Get Garbage
+    public function getGarbage()
+    {
+        $item_variety = ItemVariety::onlyTrashed()->get();
+
+        return response()->json(['data' => $item_variety, 'message' => 'Success get data garbage item variety'], 200);
+    }
+
     //Store data
     public function store(StoreItemVarietyRequest $request)
     {

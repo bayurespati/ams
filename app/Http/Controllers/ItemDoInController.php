@@ -11,6 +11,14 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ItemDoInController extends Controller
 {
+    //Get All
+    public function getAll()
+    {
+        $do_in = ItemDoIn::all();
+
+        return response()->json(['data' => $do_in, 'message' => 'Success get data countries'], 200);
+    }
+
     //Add item do in with upload
     public function uploadItem(Request $request)
     {
@@ -48,6 +56,18 @@ class ItemDoInController extends Controller
         } catch (Exception $e) {
             return response()->json(['data' => $do, 'message' => $e], 500);
         }
+    }
+
+    //Update data
+    public function verification(Request $request)
+    {
+        $item_do_in = ItemDoIn::where('do_in_id', $request->do_in_id)->where('id', $request->id)->first();
+        if (!$item_do_in)
+            return response()->json(['data' => $item_do_in, 'message' => 'Data not found'], 404);
+        $item_do_in->is_verified = true;
+        $item_do_in->save();
+
+        return response()->json(['data' => $item_do_in, 'message' => 'Success verification data item do in'], 200);
     }
 
     //Update data

@@ -26,4 +26,9 @@ class DoIn extends Model
             $model->id = Str::uuid();
         });
     }
+
+    public function po()
+    {
+        return $this->belongsTo('App\Models\PO', 'po_id', 'id')->withTrashed();
+    }
 }

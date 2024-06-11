@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'cities',], function () {
     Route::GET('/detail', [CityController::class, 'getById']);
+    Route::GET('/garbage', [CityController::class, 'getGarbage']);
     Route::GET('', [CityController::class, 'getAll']);
     Route::POST('', [CityController::class, 'store']);
     Route::PATCH('', [CityController::class, 'update']);
@@ -22,6 +23,7 @@ Route::group(['prefix' => 'cities',], function () {
 
 Route::group(['prefix' => 'countries',], function () {
     Route::GET('/detail', [CountryController::class, 'getById']);
+    Route::GET('/garbage', [CountryController::class, 'getGarbage']);
     Route::GET('', [CountryController::class, 'getAll']);
     Route::POST('', [CountryController::class, 'store']);
     Route::PATCH('', [CountryController::class, 'update']);
@@ -31,6 +33,7 @@ Route::group(['prefix' => 'countries',], function () {
 
 Route::group(['prefix' => 'item_types',], function () {
     Route::GET('/detail', [ItemTypeController::class, 'getById']);
+    Route::GET('/garbage', [ItemTypeController::class, 'getGarbage']);
     Route::GET('', [ItemTypeController::class, 'getAll']);
     Route::POST('', [ItemTypeController::class, 'store']);
     Route::PATCH('', [ItemTypeController::class, 'update']);
@@ -40,6 +43,7 @@ Route::group(['prefix' => 'item_types',], function () {
 
 Route::group(['prefix' => 'item_varieties',], function () {
     Route::GET('/detail', [ItemVarietyController::class, 'getById']);
+    Route::GET('/garbage', [ItemVarietyController::class, 'getGarbage']);
     Route::GET('', [ItemVarietyController::class, 'getAll']);
     Route::POST('', [ItemVarietyController::class, 'store']);
     Route::PATCH('', [ItemVarietyController::class, 'update']);
@@ -49,6 +53,7 @@ Route::group(['prefix' => 'item_varieties',], function () {
 
 Route::group(['prefix' => 'plans',], function () {
     Route::GET('/detail', [PlanController::class, 'getById']);
+    Route::GET('/garbage', [PlanController::class, 'getGarbage']);
     Route::GET('', [PlanController::class, 'getAll']);
     Route::POST('', [PlanController::class, 'store']);
     Route::PATCH('', [PlanController::class, 'update']);
@@ -58,6 +63,7 @@ Route::group(['prefix' => 'plans',], function () {
 
 Route::group(['prefix' => 'po',], function () {
     Route::GET('/detail', [POController::class, 'getById']);
+    Route::GET('/garbage', [POController::class, 'getGarbage']);
     Route::GET('', [POController::class, 'getAll']);
     Route::POST('', [POController::class, 'store']);
     Route::PATCH('', [POController::class, 'update']);
@@ -67,6 +73,7 @@ Route::group(['prefix' => 'po',], function () {
 
 Route::group(['prefix' => 'do-in',], function () {
     Route::GET('/detail', [DoInController::class, 'getById']);
+    Route::GET('/garbage', [DoInController::class, 'getGarbage']);
     Route::GET('', [DoInController::class, 'getAll']);
     Route::POST('', [DoInController::class, 'store']);
     Route::PATCH('', [DoInController::class, 'update']);
@@ -75,8 +82,10 @@ Route::group(['prefix' => 'do-in',], function () {
 });
 
 Route::group(['prefix' => 'item-do-in',], function () {
+    Route::get('', [ItemDoInController::class, 'getAll']);
     Route::POST('/upload', [ItemDoInController::class, 'uploadItem']);
     Route::POST('', [ItemDoInController::class, 'addItem']);
     Route::PATCH('', [ItemDoInController::class, 'update']);
+    Route::PATCH('verification', [ItemDoInController::class, 'verification']);
     Route::DELETE('', [ItemDoInController::class, 'destroy']);
 });

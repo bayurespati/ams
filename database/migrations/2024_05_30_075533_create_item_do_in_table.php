@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('do_in_id');
             $table->string('sn')->nullable();
             $table->integer('jumlah');
+            $table->tinyInteger('is_verified')->default(0);
             $table->timestamps();
         });
     }

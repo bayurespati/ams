@@ -26,6 +26,14 @@ class ItemTypeController extends Controller
         return response()->json(['data' => $item_types, 'message' => 'Success get data item types'], 200);
     }
 
+    //Get Garbage
+    public function getGarbage()
+    {
+        $item_type = ItemType::onlyTrashed()->get();
+
+        return response()->json(['data' => $item_type, 'message' => 'Success get data garbage item type'], 200);
+    }
+
     //Store data
     public function store(StoreItemTypeRequest $request)
     {

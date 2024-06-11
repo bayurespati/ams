@@ -28,6 +28,14 @@ class POController extends Controller
         return response()->json(['data' => $po, 'message' => 'Success get data po'], 200);
     }
 
+    //Get Garbage
+    public function getGarbage()
+    {
+        $po = PO::onlyTrashed()->get();
+
+        return response()->json(['data' => $po, 'message' => 'Success get data garbage po'], 200);
+    }
+
     //Store data
     public function store(StorePORequest $request)
     {

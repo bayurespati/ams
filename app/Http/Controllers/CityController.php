@@ -26,6 +26,14 @@ class CityController extends Controller
         return response()->json(['data' => $cities, 'message' => 'Success get data cities'], 200);
     }
 
+    //Get Garbage
+    public function getGarbage()
+    {
+        $cities = City::onlyTrashed()->get();
+
+        return response()->json(['data' => $cities, 'message' => 'Success get data garbage  cities'], 200);
+    }
+
     //Store data
     public function store(StoreCityRequest $request)
     {

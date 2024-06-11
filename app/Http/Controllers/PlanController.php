@@ -26,6 +26,14 @@ class PlanController extends Controller
         return response()->json(['data' => $plan, 'message' => 'Success get data plans'], 200);
     }
 
+    //Get Garbage
+    public function getGarbage()
+    {
+        $plan = Plan::onlyTrashed()->get();
+
+        return response()->json(['data' => $plan, 'message' => 'Success get data garbage plan'], 200);
+    }
+
     //Store data
     public function store(StorePlanRequest $request)
     {

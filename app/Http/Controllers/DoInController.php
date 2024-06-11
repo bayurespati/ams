@@ -17,7 +17,7 @@ class DoInController extends Controller
     //Get By id
     public function getById(Request $request)
     {
-        $do_in = DoIn::find($request->id);
+        $do_in = DoIn::where('id', $request->id)->with('po')->first();
         if (!$do_in)
             return response()->json(['data' => $do_in, 'message' => 'Data not found'], 404);
         return response()->json(['data' => $do_in, 'message' => 'Success get data do in'], 200);
@@ -26,9 +26,17 @@ class DoInController extends Controller
     //Get All
     public function getAll()
     {
-        $do_in = DoIn::all();
+        $do_in = DoIn::with('po')->get();
 
         return response()->json(['data' => $do_in, 'message' => 'Success get data do in'], 200);
+    }
+
+    //Get Garbage
+    public function getGarbage()
+    {
+        $do_in = DoIn::onlyTrashed()->get();
+
+        return response()->json(['data' => $do_in, 'message' => 'Success get data garbage  do in'], 200);
     }
 
     //Store data
