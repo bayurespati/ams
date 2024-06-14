@@ -86,6 +86,20 @@ class DoInController extends Controller
         return response()->json(['data' => $do_in, 'message' => 'Success update data do in'], 200);
     }
 
+    public function approve(Request $request)
+    {
+        $do_in = DoIn::where('uuid', $request->id)->first();
+        if (!$do_in)
+            return response()->json(['data' => $do_in, 'message' => 'Data not found'], 404);
+        $item_do_in = ItemDoIn::where('do_id_in', $do_in->id)->where('is_approve', 0)->first();
+        if ($item_do_in)
+            return response()->json(['data' => $do_in, 'message' => 'Item verification not complate'], 404);
+
+        $do_in->is_approve = true;
+        $do_in->save();
+        return response()->json(['data' => $do_in, 'message' => 'Success approve data do in'], 200);
+    }
+
     //Delete data
     public function destroy(Request $request)
     {

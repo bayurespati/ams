@@ -12,18 +12,15 @@ class Country extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use HasUuids;
 
     protected $table = 'country';
 
     protected $guarded = [];
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->id = Str::uuid();
-        });
-    }
+    protected $hidden = [
+        'id',
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
 }

@@ -23,6 +23,7 @@ class UpdateCountryRequest extends FormRequest
     {
         return [
             'nama' => 'required|unique:country,nama,' . $model->id,
+            'alias' => 'required|unique:country,alias,' . $model->id,
         ];
     }
 }

@@ -77,6 +77,7 @@ Route::group(['prefix' => 'do-in',], function () {
     Route::GET('', [DoInController::class, 'getAll']);
     Route::POST('', [DoInController::class, 'store']);
     Route::PATCH('', [DoInController::class, 'update']);
+    Route::PATCH('/approve', [DoInController::class, 'approve']);
     Route::PATCH('/restore', [DoInController::class, 'restore']);
     Route::DELETE('', [DoInController::class, 'destroy']);
 });

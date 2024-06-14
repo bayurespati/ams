@@ -6,14 +6,14 @@ use App\Http\Requests\StoreCountryRequest;
 use App\Http\Requests\UpdateCountryRequest;
 use App\Models\Country;
 use Illuminate\Http\Request;
-use PHPUnit\Framework\Constraint\Count;
+use Illuminate\Support\Str;
 
 class CountryController extends Controller
 {
     //Get By id
     public function getById(Request $request)
     {
-        $country = Country::find($request->id);
+        $country = Country::where('uuid', $request->id)->first();
         if (!$country)
             return response()->json(['data' => $country, 'message' => 'Data not found'], 404);
 
@@ -32,6 +32,7 @@ class CountryController extends Controller
     public function store(StoreCountryRequest $request)
     {
         $country = new Country();
+        $country->uuid = Str::uuid();
         $country->nama = $request->nama;
         $country->alias = $request->alias;
         $country->save();
@@ -50,13 +51,13 @@ class CountryController extends Controller
     //Update data
     public function update(Request $request)
     {
-        $country = Country::find($request->id);
+        $country = Country::where('uuid', $request->id)->first();
         if (!$country)
             return response()->json(['data' => $country, 'message' => 'Data not found'], 404);
         $request->validate((new UpdateCountryRequest())->rules($country));
         $country->nama = $request->nama;
         $country->alias = $request->alias;
-        $country->save();
+        $country->update();
 
         return response()->json(['data' => $country, 'message' => 'Success update data country'], 200);
     }
@@ -64,7 +65,7 @@ class CountryController extends Controller
     //Delete data
     public function destroy(Request $request)
     {
-        $model = Country::find($request->id);
+        $model = Country::where('uuid', $request->id)->first();
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
 
@@ -75,10 +76,10 @@ class CountryController extends Controller
     //Restore data softdelete
     public function restore(Request $request)
     {
-        $model = Country::withTrashed()->find($request->id);
+        $model = Country::withTrashed()->where('uuid', $request->id)->first();
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
-        $model = Country::withTrashed()->find($request->id)->restore();
+        $model->restore();
         return response()->json(['data' => $model, 'message' => 'Success restore data country'], 200);
     }
 }
