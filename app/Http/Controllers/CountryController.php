@@ -28,6 +28,14 @@ class CountryController extends Controller
         return response()->json(['data' => $cities, 'message' => 'Success get data countries'], 200);
     }
 
+    //Get Garbage
+    public function getGarbage()
+    {
+        $country = Country::onlyTrashed()->get();
+
+        return response()->json(['data' => $country, 'message' => 'Success get data garbage country'], 200);
+    }
+
     //Store data
     public function store(StoreCountryRequest $request)
     {
@@ -38,14 +46,6 @@ class CountryController extends Controller
         $country->save();
 
         return response()->json(['data' => $country, 'message' => 'Success store data country'], 200);
-    }
-
-    //Get Garbage
-    public function getGarbage()
-    {
-        $country = Country::onlyTrashed()->get();
-
-        return response()->json(['data' => $country, 'message' => 'Success get data garbage country'], 200);
     }
 
     //Update data
