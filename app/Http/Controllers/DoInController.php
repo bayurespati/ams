@@ -57,7 +57,7 @@ class DoInController extends Controller
         $do_in->file_evidence = Storage::disk('public')->put('do_in', $request->file_evidence);
         $do_in->save();
 
-        return response()->json(['data' => $do_in, 'message' => 'Success store data do in'], 200);
+        return response()->json(['data' => $do_in->load('po'), 'message' => 'Success store data do in'], 200);
     }
 
 
