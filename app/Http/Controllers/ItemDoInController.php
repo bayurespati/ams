@@ -16,7 +16,7 @@ class ItemDoInController extends Controller
     {
         $do_in = ItemDoIn::all();
 
-        return response()->json(['data' => $do_in, 'message' => 'Success get data countries'], 200);
+        return response()->json(['data' => $do_in, 'message' => 'Success get data item do in'], 200);
     }
 
     //Add item do in with upload
