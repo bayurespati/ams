@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('item_do_in', function (Blueprint $table) {
             $table->id();
-            $table->string('do_in_id');
+            $table->uuid('uuid');
+            $table->bigInteger('do_in_id');
             $table->string('sn')->nullable();
             $table->integer('jumlah');
             $table->tinyInteger('is_verified')->default(0);

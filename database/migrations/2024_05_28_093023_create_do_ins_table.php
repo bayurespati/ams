@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('do_in', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('po_id', 50);
+            $table->id();
+            $table->uuid('uuid');
+            $table->bigInteger('po_id');
             $table->string('no_do', 50)->unique();
             $table->string('lokasi_gudang');
             $table->date('tanggal_masuk');

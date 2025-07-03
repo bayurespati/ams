@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('po', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('plan_id', 50);
+            $table->id();
+            $table->string('uuid');
+            $table->bigInteger('plan_id');
             $table->string('nama_pekerjaan', 100);
             $table->string('no_po_spk_pks', 50)->nullable();
             $table->date('tanggal_po_spk_pks')->nullable();

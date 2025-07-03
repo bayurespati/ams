@@ -42,14 +42,17 @@ class DoInController extends Controller
     //Store data
     public function store(StoreDoInRequest $request)
     {
-        $po = PO::find($request->po_id);
+        $po = PO::where('uudi', "=", $request->po_id)->first();
+        $owner = Owner::where('uudi', "=", $request->owner_id)->first();
         if (!$po)
             return response()->json(['message' => 'Data po not found'], 404);
+        if (!$owner)
+            return response()->json(['message' => 'Data owner not found'], 404);
         $do_in = new DoIn();
-        $do_in->po_id = $request->po_id;
+        $do_in->po_id = $po->id;
         $do_in->no_do = $request->no_do;
         $do_in->lokasi_gudang = $request->lokasi_gudang;
-        $do_in->owner_id = $request->owner_id;
+        $do_in->owner_id = $owner->id;
         $do_in->owner_type = $request->owner_type;
         $do_in->keterangan = $request->keterangan;
         $do_in->tanggal_masuk = $request->tanggal_masuk;

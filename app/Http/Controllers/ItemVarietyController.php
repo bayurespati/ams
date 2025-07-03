@@ -6,13 +6,14 @@ use App\Http\Requests\StoreItemVarietyRequest;
 use App\Http\Requests\UpdateItemVarietyRequest;
 use App\Models\ItemVariety;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ItemVarietyController extends Controller
 {
     //Get By id
     public function getById(Request $request)
     {
-        $item_variety = ItemVariety::find($request->id);
+        $item_variety = ItemVariety::where('uuid', $request->id)->first();
         if (!$item_variety)
             return response()->json(['data' => $item_variety, 'message' => 'Data not found'], 404);
         return response()->json(['data' => $item_variety, 'message' => 'Success get data item variety'], 200);
@@ -38,6 +39,7 @@ class ItemVarietyController extends Controller
     public function store(StoreItemVarietyRequest $request)
     {
         $item_variety = new ItemVariety();
+        $item_variety->uuid = Str::uuid();
         $item_variety->nama = $request->nama;
         $item_variety->save();
 
@@ -47,7 +49,7 @@ class ItemVarietyController extends Controller
     //Update data
     public function update(Request $request)
     {
-        $item_variety = ItemVariety::find($request->id);
+        $item_variety = ItemVariety::where('uuid', $request->id)->firstOrFail();
         if (!$item_variety)
             return response()->json(['data' => $item_variety, 'message' => 'Data not found'], 404);
         $request->validate((new UpdateItemVarietyRequest())->rules($item_variety));
@@ -60,7 +62,7 @@ class ItemVarietyController extends Controller
     //Delete data
     public function destroy(Request $request)
     {
-        $model = ItemVariety::find($request->id);
+        $model = ItemVariety::where('uuid', $request->id)->first();
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
 
@@ -71,10 +73,10 @@ class ItemVarietyController extends Controller
     //Restore data softdelete
     public function restore(Request $request)
     {
-        $model = ItemVariety::withTrashed()->find($request->id);
+        $model = ItemVariety::withTrashed()->where('uuid', $request->id)->first();
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
-        $model = ItemVariety::withTrashed()->find($request->id)->restore();
+        $model = ItemVariety::withTrashed()->where('uuid', $request->id)->first()->restore();
         return response()->json(['data' => $model, 'message' => 'Success restore data item variety'], 200);
     }
 }

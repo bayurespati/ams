@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('plan', function (Blueprint $table) {
             $table->id();
             $table->string('uuid');
-            $table->integer('project_id');
+            $table->bigInteger('project_id');
             $table->string('judul');
-            $table->string('jenis_barang_id', 50);
-            $table->string('tipe_barang_id', 50);
+            $table->bigInteger('jenis_barang_id');
+            $table->bigInteger('tipe_barang_id');
             $table->string('nama_barang', 100);
             $table->integer('jumlah_barang');
             $table->boolean('is_lop');
