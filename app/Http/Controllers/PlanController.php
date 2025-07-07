@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePlanRequest;
 use App\Http\Requests\UpdatePlanRequest;
+use App\Models\ItemType;
+use App\Models\ItemVariety;
 use App\Models\Plan;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -39,13 +41,21 @@ class PlanController extends Controller
     //Store data
     public function store(StorePlanRequest $request)
     {
+
+        $tipe_barang = ItemType::where('uuid', $request->tipe_barang_id)->first();
+        $jenis_barang = ItemVariety::where('uuid', $request->jenis_barang_id)->first();
+        if (!$tipe_barang)
+            return response()->json(['message' => 'Data tipe barang not found'], 404);
+        if (!$jenis_barang)
+            return response()->json(['message' => 'Data jenis barang not found'], 404);
+
         $plan = new Plan();
         $plan->uuid = Str::uuid();
         $plan->project_id = $request->project_id;
         $plan->judul = $request->judul;
         $plan->nama_barang = $request->nama_barang;
-        $plan->jenis_barang_id = $request->jenis_barang_id;
-        $plan->tipe_barang_id = $request->tipe_barang_id;
+        $plan->jenis_barang_id = $jenis_barang->id;
+        $plan->tipe_barang_id = $tipe_barang->id;
         $plan->jumlah_barang = $request->jumlah_barang;
         $plan->no_prpo = $request->no_prpo;
         $plan->is_lop = $request->is_lop;
