@@ -14,7 +14,7 @@ class POController extends Controller
     //Get By id
     public function getById(Request $request)
     {
-        $po = PO::find($request->id);
+        $po = PO::where('uuid', $request->id)->first();
         if (!$po)
             return response()->json(['data' => $po, 'message' => 'Data not found'], 404);
         return response()->json(['data' => $po, 'message' => 'Success get data po'], 200);
@@ -39,12 +39,11 @@ class POController extends Controller
     //Store data
     public function store(StorePORequest $request)
     {
-        //check plan id before store data po
-        $plan = Plan::find($request->plan_id);
+        $plan = Plan::where('uuid', $request->plan_id)->first();
         if (!$plan)
             return response()->json(['message' => 'Data plan not found'], 404);
         $po = new PO();
-        $po->plan_id = $request->plan_id;
+        $po->plan_id = $plan->id;
         $po->nama_pekerjaan = $request->nama_pekerjaan;
         $po->no_po_spk_pks = $request->no_po_spk_pks;
         $po->tanggal_po_spk_pks = $request->tanggal_po_spk_pks;
@@ -64,7 +63,7 @@ class POController extends Controller
     public function update(Request $request)
     {
         //check plan id before update data po
-        $plan = Plan::find($request->plan_id);
+        $plan = Plan::where('uuid', $request->plan_id)->first();
         if (!$plan)
             return response()->json(['message' => 'Data plan not found'], 404);
         $po = PO::find($request->id);
@@ -92,7 +91,7 @@ class POController extends Controller
     //Delete data
     public function destroy(Request $request)
     {
-        $model = PO::find($request->id);
+        $model = PO::where('uuid', $request->id)->first();
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
 
@@ -103,10 +102,10 @@ class POController extends Controller
     //Restore data softdelete
     public function restore(Request $request)
     {
-        $model = PO::withTrashed()->find($request->id);
+        $model = PO::withTrashed()->where('uuid', $request->id)->first();
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
-        $model = PO::withTrashed()->find($request->id)->restore();
+        $model = PO::withTrashed()->where('uuid', $request->id)->first()->restore();
         return response()->json(['data' => $model, 'message' => 'Success restore data po'], 200);
     }
 }
