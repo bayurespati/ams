@@ -68,15 +68,22 @@ class PlanController extends Controller
     //Update data
     public function update(Request $request)
     {
+        $tipe_barang = ItemType::where('uuid', $request->tipe_barang_id)->first();
+        $jenis_barang = ItemVariety::where('uuid', $request->jenis_barang_id)->first();
         $plan = Plan::where('uuid', $request->id)->first();
+
+        if (!$tipe_barang)
+            return response()->json(['message' => 'Data tipe barang not found'], 404);
+        if (!$jenis_barang)
+            return response()->json(['message' => 'Data jenis barang not found'], 404);
         if (!$plan)
             return response()->json(['data' => $plan, 'message' => 'Data not found'], 404);
         $request->validate((new UpdatePlanRequest())->rules($plan));
         $plan->project_id = $request->project_id;
         $plan->judul = $request->judul;
         $plan->nama_barang = $request->nama_barang;
-        $plan->jenis_barang_id = $request->jenis_barang_id;
-        $plan->tipe_barang_id = $request->tipe_barang_id;
+        $plan->jenis_barang_id = $jenis_barang->id;
+        $plan->tipe_barang_id = $tipe_barang->id;
         $plan->jumlah_barang = $request->jumlah_barang;
         $plan->no_prpo = $request->no_prpo;
         if ($request->file_prpo)

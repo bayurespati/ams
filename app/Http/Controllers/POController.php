@@ -8,6 +8,7 @@ use App\Models\Plan;
 use App\Models\PO;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class POController extends Controller
 {
@@ -43,6 +44,7 @@ class POController extends Controller
         if (!$plan)
             return response()->json(['message' => 'Data plan not found'], 404);
         $po = new PO();
+        $po->uuid = Str::uuid();
         $po->plan_id = $plan->id;
         $po->nama_pekerjaan = $request->nama_pekerjaan;
         $po->no_po_spk_pks = $request->no_po_spk_pks;
