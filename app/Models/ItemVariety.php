@@ -12,4 +12,11 @@ class ItemVariety extends Model
     protected $table = 'item_variety';
 
     protected $guarded = [];
+
+    protected $hidden = [
+        'id',
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
 }

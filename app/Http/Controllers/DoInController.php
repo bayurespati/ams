@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
 
 class DoInController extends Controller
 {
@@ -49,6 +50,7 @@ class DoInController extends Controller
         if (!$owner)
             return response()->json(['message' => 'Data owner not found'], 404);
         $do_in = new DoIn();
+        $do_in->uuid = Str::uuid();
         $do_in->po_id = $po->id;
         $do_in->no_do = $request->no_do;
         $do_in->lokasi_gudang = $request->lokasi_gudang;
@@ -67,17 +69,20 @@ class DoInController extends Controller
     //Update data
     public function update(Request $request)
     {
-        $po = PO::find($request->po_id);
+        $po = PO::where('uudi', "=", $request->po_id)->first();
+        $owner = Owner::where('uudi', "=", $request->owner_id)->first();
+        $do_in = DoIn::where('uuid', "=", $request->id)->first();
         if (!$po)
             return response()->json(['message' => 'Data po not found'], 404);
-        $do_in = DoIn::find($request->id);
+        if (!$owner)
+            return response()->json(['message' => 'Data owner not found'], 404);
         if (!$do_in)
             return response()->json(['data' => $do_in, 'message' => 'Data not found'], 404);
         $request->validate((new UpdateDoInRequest())->rules($do_in));
-        $do_in->po_id = $request->po_id;
+        $do_in->po_id = $po->id;
         $do_in->no_do = $request->no_do;
         $do_in->lokasi_gudang = $request->lokasi_gudang;
-        $do_in->owner_id = $request->owner_id;
+        $do_in->owner_id = $owner->id;
         $do_in->owner_type = $request->owner_type;
         $do_in->keterangan = $request->keterangan;
         $do_in->tanggal_masuk = $request->tanggal_masuk;
@@ -106,7 +111,7 @@ class DoInController extends Controller
     //Delete data
     public function destroy(Request $request)
     {
-        $model = DoIn::find($request->id);
+        $model = DoIn::where('uuid', $request->id)->first();
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
 
@@ -117,10 +122,10 @@ class DoInController extends Controller
     //Restore data softdelete
     public function restore(Request $request)
     {
-        $model = DoIn::withTrashed()->find($request->id);
+        $model = DonIn::withTrashed()->where('uuid', $request->id)->first();
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
-        $model = DoIn::withTrashed()->find($request->id)->restore();
+        $model->restore();
         return response()->json(['data' => $model, 'message' => 'Success restore data do in'], 200);
     }
 }
