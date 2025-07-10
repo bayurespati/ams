@@ -26,7 +26,7 @@ class PlanController extends Controller
     //Get All
     public function getAll()
     {
-        $plan = Plan::all();
+        $plan = Plan::with(['item_type', 'item_variety'])->get();
         return response()->json(['data' => $plan, 'message' => 'Success get data plans'], 200);
     }
 

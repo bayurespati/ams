@@ -21,4 +21,14 @@ class Plan extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    public function item_type()
+    {
+        return $this->belongsTo(ItemType::class, 'tipe_barang_id', 'id');
+    }
+
+    public function item_variety()
+    {
+        return $this->belongsTo(ItemVariety::class, 'jenis_barang_id', 'id');
+    }
 }
