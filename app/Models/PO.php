@@ -21,4 +21,9 @@ class PO extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    public function plan()
+    {
+        return $this->belongsTo(Plan::class, 'plan_id', 'id');
+    }
 }

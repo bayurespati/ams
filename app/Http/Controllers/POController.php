@@ -24,9 +24,23 @@ class POController extends Controller
     //Get All
     public function getAll()
     {
-        $po = PO::all();
+        $pos = PO::with(['plan'])->get()->map(function ($po) {
+            return [
+                "uuid" => $po->uuid,
+                "nama_pekerjaan" => $po->nama_pekerjaan,
+                "no_po_spk_pks" => $po->no_po_spk_pks,
+                "tanggal_po_spk_pks" => $po->tanggal_po_spk_pks,
+                "file_po_spk_pks" => $po->file_po_spk_pks,
+                "file_boq" => $po->file_boq,
+                "nilai_pengadaan" => $po->nilai_pengadaan,
+                "tanggal_delivery" => $po->tanggal_delivery,
+                "akun" => $po->akun,
+                "cost_center" => $po->uuid,
+                'plan_id' => optional($po->plan)->uuid,
+            ];
+        });
 
-        return response()->json(['data' => $po, 'message' => 'Success get data po'], 200);
+        return response()->json(['data' => $pos, 'message' => 'Success get data po'], 200);
     }
 
     //Get Garbage
@@ -71,8 +85,10 @@ class POController extends Controller
         $po = PO::find($request->id);
         if (!$po)
             return response()->json(['data' => $po, 'message' => 'Data not found'], 404);
+
         //validate data
         $request->validate((new UpdatePORequest())->rules($po));
+
         $po->plan_id = $request->plan_id;
         $po->nama_pekerjaan = $request->nama_pekerjaan;
         $po->no_po_spk_pks = $request->no_po_spk_pks;
@@ -107,7 +123,8 @@ class POController extends Controller
         $model = PO::withTrashed()->where('uuid', $request->id)->first();
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
-        $model = PO::withTrashed()->where('uuid', $request->id)->first()->restore();
+
+        $model->restore();
         return response()->json(['data' => $model, 'message' => 'Success restore data po'], 200);
     }
 }
