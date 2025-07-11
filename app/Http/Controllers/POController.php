@@ -89,7 +89,7 @@ class POController extends Controller
         //validate data
         $request->validate((new UpdatePORequest())->rules($po));
 
-        $po->plan_id = $request->plan_id;
+        $po->plan_id = $plan->id;
         $po->nama_pekerjaan = $request->nama_pekerjaan;
         $po->no_po_spk_pks = $request->no_po_spk_pks;
         $po->tanggal_po_spk_pks = $request->tanggal_po_spk_pks;
