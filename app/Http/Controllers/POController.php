@@ -82,7 +82,7 @@ class POController extends Controller
         $plan = Plan::where('uuid', $request->plan_id)->first();
         if (!$plan)
             return response()->json(['message' => 'Data plan not found'], 404);
-        $po = PO::find($request->id);
+        $po = PO::where('uuid', $request->id)->first();
         if (!$po)
             return response()->json(['data' => $po, 'message' => 'Data not found'], 404);
 
