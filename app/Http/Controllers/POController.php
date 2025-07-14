@@ -35,7 +35,7 @@ class POController extends Controller
                 "nilai_pengadaan" => $po->nilai_pengadaan,
                 "tanggal_delivery" => $po->tanggal_delivery,
                 "akun" => $po->akun,
-                "cost_center" => $po->uuid,
+                "cost_center" => $po->cost_center,
                 'plan_id' => optional($po->plan)->uuid,
             ];
         });
