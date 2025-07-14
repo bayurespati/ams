@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDoInRequest;
 use App\Http\Requests\UpdateDoInRequest;
+use App\Http\Resources\DoInResource;
 use App\Imports\AddItemDoInImport;
 use App\Models\DoIn;
 use App\Models\PO;
@@ -27,23 +28,9 @@ class DoInController extends Controller
     //Get All
     public function getAll()
     {
-        $do_in = DoIn::with(['po'])->get()->map(function ($do) {
-            return [
-                "uuid" => $do->uuid,
-                "no_do" => $do->no_do,
-                "lokasi_gudang" => $do->lokasi_gudang,
-                "owner_id" => $do->owner_id,
-                "owner_type" => $do->owner_type,
-                "keterangan" => $do->keterangan,
-                "tanggal_masuk" => $do->tanggal_masuk,
-                "no_gr" => $do->no_gr,
-                "file_evidence" => $do->file_evidence,
-                'po_id' => optional($do->po)->uuid,
-                'po' => $do->po
-            ];
-        });
-
-        return response()->json(['data' => $do_in, 'message' => 'Success get data do in'], 200);
+        $do_in = DoIn::with(['po'])->get();
+        $data = DoInResource::collection($do_in);
+        return response()->json(['data' => $data, 'message' => 'Success get data do in'], 200);
     }
 
     //Get Garbage
@@ -102,8 +89,10 @@ class DoInController extends Controller
         if ($request->file_evidence)
             $do_in->file_evidence = Storage::disk('public')->put('do_in', $request->file_evidence);
         $do_in->save();
+        $do_in->load('po');
+        $data = new DoInResource($do_in);
 
-        return response()->json(['data' => $do_in, 'message' => 'Success update data do in'], 200);
+        return response()->json(['data' => $data, 'message' => 'Success update data do in'], 200);
     }
 
     public function approve(Request $request)

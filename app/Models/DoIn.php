@@ -19,11 +19,11 @@ class DoIn extends Model
         'id',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
     ];
 
     public function po()
     {
-        return $this->belongsTo('App\Models\PO', 'po_id', 'id')->withTrashed();
+        return $this->belongsTo(PO::class, 'po_id', 'id')->withTrashed();
     }
 }
