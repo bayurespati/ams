@@ -30,6 +30,7 @@ class DoInController extends Controller
         $do_in = DoIn::with('po')->get();
         $do_in = DoIn::with(['po'])->get()->map(function ($do) {
             return [
+                "uuid" => $do->uuid,
                 "no_do" => $do->no_do,
                 "lokasi_gudang" => $do->lokasi_gudang,
                 "owner_id" => $do->owner_id,
