@@ -26,7 +26,6 @@ class UpdateDoInRequest extends FormRequest
             'no_do' => 'required|unique:do_in,no_do,' . $model->id,
             'lokasi_gudang' => 'required',
             'owner_id' => 'required',
-            'owner_type' => 'required',
             'tanggal_masuk' => 'required',
             'no_gr' => 'required',
         ];
