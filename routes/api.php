@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DoInController;
 use App\Http\Controllers\ItemDoInController;
@@ -19,6 +20,16 @@ Route::group(['prefix' => 'cities',], function () {
     Route::PATCH('', [CityController::class, 'update']);
     Route::PATCH('/restore', [CityController::class, 'restore']);
     Route::DELETE('', [CityController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'companies',], function () {
+    Route::GET('/detail', [CompanyController::class, 'getById']);
+    Route::GET('/garbage', [CompanyController::class, 'getGarbage']);
+    Route::GET('', [CompanyController::class, 'getAll']);
+    Route::POST('', [CompanyController::class, 'store']);
+    Route::PATCH('', [CompanyController::class, 'update']);
+    Route::PATCH('/restore', [CompanyController::class, 'restore']);
+    Route::DELETE('', [CompanyController::class, 'destroy']);
 });
 
 Route::group(['prefix' => 'countries',], function () {

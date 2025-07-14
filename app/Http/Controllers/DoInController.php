@@ -43,19 +43,18 @@ class DoInController extends Controller
     //Store data
     public function store(StoreDoInRequest $request)
     {
-        $po = PO::where('uudi', "=", $request->po_id)->first();
-        $owner = Owner::where('uudi', "=", $request->owner_id)->first();
+        $po = PO::where('uuid', "=", $request->po_id)->first();
+        // $owner = Owner::where('uuid', "=", $request->owner_id)->first();
         if (!$po)
             return response()->json(['message' => 'Data po not found'], 404);
-        if (!$owner)
-            return response()->json(['message' => 'Data owner not found'], 404);
+        // if (!$owner)
+        //     return response()->json(['message' => 'Data owner not found'], 404);
         $do_in = new DoIn();
         $do_in->uuid = Str::uuid();
         $do_in->po_id = $po->id;
         $do_in->no_do = $request->no_do;
         $do_in->lokasi_gudang = $request->lokasi_gudang;
-        $do_in->owner_id = $owner->id;
-        $do_in->owner_type = $request->owner_type;
+        $do_in->owner_id = $request->owner_id;
         $do_in->keterangan = $request->keterangan;
         $do_in->tanggal_masuk = $request->tanggal_masuk;
         $do_in->no_gr = $request->no_gr;
@@ -69,21 +68,20 @@ class DoInController extends Controller
     //Update data
     public function update(Request $request)
     {
-        $po = PO::where('uudi', "=", $request->po_id)->first();
-        $owner = Owner::where('uudi', "=", $request->owner_id)->first();
+        $po = PO::where('uuid', "=", $request->po_id)->first();
+        // $owner = Owner::where('uuid', "=", $request->owner_id)->first();
         $do_in = DoIn::where('uuid', "=", $request->id)->first();
         if (!$po)
             return response()->json(['message' => 'Data po not found'], 404);
-        if (!$owner)
-            return response()->json(['message' => 'Data owner not found'], 404);
+        // if (!$owner)
+        //     return response()->json(['message' => 'Data owner not found'], 404);
         if (!$do_in)
             return response()->json(['data' => $do_in, 'message' => 'Data not found'], 404);
         $request->validate((new UpdateDoInRequest())->rules($do_in));
         $do_in->po_id = $po->id;
         $do_in->no_do = $request->no_do;
         $do_in->lokasi_gudang = $request->lokasi_gudang;
-        $do_in->owner_id = $owner->id;
-        $do_in->owner_type = $request->owner_type;
+        $do_in->owner_id = $request->owner_id;
         $do_in->keterangan = $request->keterangan;
         $do_in->tanggal_masuk = $request->tanggal_masuk;
         $do_in->no_gr = $request->no_gr;

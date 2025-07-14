@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreDoInRequest extends FormRequest
+class UpdateCompanyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,16 +19,13 @@ class StoreDoInRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules($model): array
     {
         return [
-            'po_id' => 'required',
-            'no_do' => 'required|unique:do_in,no_do',
-            'lokasi_gudang' => 'required',
-            'owner_id' => 'required',
-            'tanggal_masuk' => 'required',
-            'no_gr' => 'required',
-            'file_evidence' => 'required'
+            'name' => 'required|unique:companies,name,' . $model->id,
+            'phone' => 'required|unique:companies,phone,' . $model->id,
+            'email' => 'required|unique:companies,email,' . $model->id,
+            'address' => 'required',
         ];
     }
 }
