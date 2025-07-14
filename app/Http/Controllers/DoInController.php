@@ -19,10 +19,11 @@ class DoInController extends Controller
     //Get By id
     public function getById(Request $request)
     {
-        $do_in = DoIn::where('id', $request->id)->with('po')->first();
+        $do_in = DoIn::where('uuid', $request->id)->with('po')->first();
+        $data = new DoInResource($do_in);
         if (!$do_in)
             return response()->json(['data' => $do_in, 'message' => 'Data not found'], 404);
-        return response()->json(['data' => $do_in, 'message' => 'Success get data do in'], 200);
+        return response()->json(['data' => $data, 'message' => 'Success get data do in'], 200);
     }
 
     //Get All
