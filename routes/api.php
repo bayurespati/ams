@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CountryController;
@@ -40,6 +41,16 @@ Route::group(['prefix' => 'countries',], function () {
     Route::PATCH('', [CountryController::class, 'update']);
     Route::PATCH('/restore', [CountryController::class, 'restore']);
     Route::DELETE('', [CountryController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'brands',], function () {
+    Route::GET('/detail', [BrandController::class, 'getById']);
+    Route::GET('/garbage', [BrandController::class, 'getGarbage']);
+    Route::GET('', [BrandController::class, 'getAll']);
+    Route::POST('', [BrandController::class, 'store']);
+    Route::PATCH('', [BrandController::class, 'update']);
+    Route::PATCH('/restore', [BrandController::class, 'restore']);
+    Route::DELETE('', [BrandController::class, 'destroy']);
 });
 
 Route::group(['prefix' => 'item_types',], function () {
