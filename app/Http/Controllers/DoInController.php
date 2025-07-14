@@ -27,7 +27,6 @@ class DoInController extends Controller
     //Get All
     public function getAll()
     {
-        $do_in = DoIn::with('po')->get();
         $do_in = DoIn::with(['po'])->get()->map(function ($do) {
             return [
                 "uuid" => $do->uuid,
@@ -40,6 +39,7 @@ class DoInController extends Controller
                 "no_gr" => $do->no_gr,
                 "file_evidence" => $do->file_evidence,
                 'po_id' => optional($do->po)->uuid,
+                'po' => $do->po
             ];
         });
 
