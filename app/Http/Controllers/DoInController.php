@@ -28,6 +28,19 @@ class DoInController extends Controller
     public function getAll()
     {
         $do_in = DoIn::with('po')->get();
+        $do_in = DoIn::with(['po'])->get()->map(function ($do) {
+            return [
+                "no_do" => $do->no_do,
+                "lokasi_gudang" => $do->lokasi_gudang,
+                "owner_id" => $do->owner_id,
+                "owner_type" => $do->owner_type,
+                "keterangan" => $do->keterangan,
+                "tanggal_masuk" => $do->tanggal_masuk,
+                "no_gr" => $do->no_gr,
+                "file_evidence" => $do->file_evidence,
+                'po_id' => optional($do->po)->uuid,
+            ];
+        });
 
         return response()->json(['data' => $do_in, 'message' => 'Success get data do in'], 200);
     }
