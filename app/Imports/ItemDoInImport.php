@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Models\ItemDoIn;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
+use Illuminate\Support\Str;
 
 class ItemDoInImport implements ToModel, WithStartRow
 {
@@ -25,12 +26,13 @@ class ItemDoInImport implements ToModel, WithStartRow
 
     /**
      * Model 
-    */
+     */
     public function model(array $row)
     {
         $item = new ItemDoIn();
         $item->do_in_id = $this->do_in_id;
         $item->sn = $row[0];
+        $item->uuid = Str::uuid();
         $item->jumlah = $row[1];
         $item->save();
     }

@@ -10,6 +10,7 @@ use App\Http\Controllers\ItemTypeController;
 use App\Http\Controllers\ItemVarietyController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\POController;
+use App\Models\ItemDoIn;
 use Illuminate\Support\Facades\Route;
 
 
@@ -105,6 +106,7 @@ Route::group(['prefix' => 'do-in',], function () {
 });
 
 Route::group(['prefix' => 'item-do-in',], function () {
+    Route::GET('/detail', [ItemDoInController::class, 'getById']);
     Route::get('', [ItemDoInController::class, 'getAll']);
     Route::POST('/upload', [ItemDoInController::class, 'uploadItem']);
     Route::POST('', [ItemDoInController::class, 'addItem']);

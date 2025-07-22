@@ -19,4 +19,9 @@ class ItemDoIn extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    public function do_in()
+    {
+        return $this->belongsTo(DoIn::class, 'do_in_id', 'id')->withTrashed();
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ItemDoInResource;
 use App\Imports\ItemDoInImport;
 use App\Models\DoIn;
 use App\Models\ItemDoIn;
@@ -12,12 +13,21 @@ use Illuminate\Support\Str;
 
 class ItemDoInController extends Controller
 {
+    public function getById(Request $request)
+    {
+        $item_do_in = ItemDoIn::where('uuid', $request->id)->with('do_in')->first();
+        $data = new ItemDoInResource($item_do_in);
+        if (!$item_do_in)
+            return response()->json(['data' => $data, 'message' => 'Data not found'], 404);
+        return response()->json(['data' => $data, 'message' => 'Success get data do in'], 200);
+    }
+
     //Get All
     public function getAll()
     {
-        $do_in = ItemDoIn::all();
-
-        return response()->json(['data' => $do_in, 'message' => 'Success get data item do in'], 200);
+        $do_in = ItemDoIn::with('do_in')->get();
+        $data = ItemDoInResource::collection($do_in);
+        return response()->json(['data' => $data, 'message' => 'Success get data item do in'], 200);
     }
 
     //Add item do in with upload
@@ -66,8 +76,10 @@ class ItemDoInController extends Controller
             return response()->json(['data' => $item_do_in, 'message' => 'Data not found'], 404);
         $item_do_in->is_verified = true;
         $item_do_in->save();
+        $item_do_in->load('do_in');
+        $data = new ItemDoInResource($item_do_in);
 
-        return response()->json(['data' => $item_do_in, 'message' => 'Success verification data item do in'], 200);
+        return response()->json(['data' => $data, 'message' => 'Success verification data item do in'], 200);
     }
 
     //Update data
@@ -79,8 +91,10 @@ class ItemDoInController extends Controller
         $item_do_in->sn = $request->sn;
         $item_do_in->jumlah = $request->jumlah;
         $item_do_in->save();
+        $item_do_in->load('do_in');
+        $data = new ItemDoInResource($item_do_in);
 
-        return response()->json(['data' => $item_do_in, 'message' => 'Success update data item do in'], 200);
+        return response()->json(['data' => $data, 'message' => 'Success update data item do in'], 200);
     }
 
     //Delete data
