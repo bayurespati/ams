@@ -22,15 +22,13 @@ class ItemDoInController extends Controller
     //Add item do in with upload
     public function uploadItem(Request $request)
     {
-        $do = DoIn::find($request->do_in_id);
+        $do = DoIn::where('uuid', $request->do_in_id);
         if (!$do)
             return response()->json(['message' => 'Data do in not found'], 404);
 
         try {
-
             $file = $request->file('file');
             Excel::import(new ItemDoInImport($request->do_in_id), $file, \Maatwebsite\Excel\Excel::XLSX);
-
             return response()->json(['data' => $do, 'message' => 'Success add item on do in'], 200);
         } catch (Exception $e) {
             return response()->json(['data' => $do, 'message' => $e], 500);
@@ -40,28 +38,28 @@ class ItemDoInController extends Controller
     //Add item do in on json
     public function addItem(Request $request)
     {
-        $do = DoIn::find($request->do_in_id);
-        if (!$do)
+        $do_in = DoIn::where('uuid', $request->do_in_id)->first();
+        if (!$do_in)
             return response()->json(['message' => 'Data do in not found'], 404);
 
         try {
             foreach ($request->items as $item) {
                 $itemDoIn = new ItemDoIn();
-                $itemDoIn->do_in_id = $request->do_in_id;
+                $itemDoIn->do_in_id = $do_in->id;
                 $itemDoIn->sn = $item["sn"];
                 $itemDoIn->jumlah = $item["jumlah"];
                 $itemDoIn->save();
             }
-            return response()->json(['data' => $do, 'message' => 'Success add item on do in'], 200);
+            return response()->json(['data' => $do_in, 'message' => 'Success add item on do in'], 200);
         } catch (Exception $e) {
-            return response()->json(['data' => $do, 'message' => $e], 500);
+            return response()->json(['data' => $do_in, 'message' => $e], 500);
         }
     }
 
     //Update data
     public function verification(Request $request)
     {
-        $item_do_in = ItemDoIn::where('do_in_id', $request->do_in_id)->where('id', $request->id)->first();
+        $item_do_in = ItemDoIn::where('uuid', $request->id)->first();
         if (!$item_do_in)
             return response()->json(['data' => $item_do_in, 'message' => 'Data not found'], 404);
         $item_do_in->is_verified = true;
@@ -73,7 +71,7 @@ class ItemDoInController extends Controller
     //Update data
     public function update(Request $request)
     {
-        $item_do_in = ItemDoIn::find($request->id);
+        $item_do_in = ItemDoIn::where('uuid', $request->id)->first();
         if (!$item_do_in)
             return response()->json(['data' => $item_do_in, 'message' => 'Data not found'], 404);
         $item_do_in->sn = $request->sn;
@@ -86,7 +84,7 @@ class ItemDoInController extends Controller
     //Delete data
     public function destroy(Request $request)
     {
-        $model = ItemDoIn::find($request->id);
+        $model = ItemDoIn::where('uuid', $request->id)->first();
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
 
