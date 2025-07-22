@@ -12,4 +12,11 @@ class ItemDoIn extends Model
     protected $table = 'item_do_in';
 
     protected $guarded = [];
+
+    protected $hidden = [
+        'id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
 }
