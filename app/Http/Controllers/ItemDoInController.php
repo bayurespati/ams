@@ -8,6 +8,7 @@ use App\Models\ItemDoIn;
 use Illuminate\Http\Request;
 use Exception;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
 
 class ItemDoInController extends Controller
 {
@@ -46,6 +47,7 @@ class ItemDoInController extends Controller
             foreach ($request->items as $item) {
                 $itemDoIn = new ItemDoIn();
                 $itemDoIn->do_in_id = $do_in->id;
+                $itemDoIn->uuid = Str::uuid();
                 $itemDoIn->sn = $item["sn"];
                 $itemDoIn->jumlah = $item["jumlah"];
                 $itemDoIn->save();
