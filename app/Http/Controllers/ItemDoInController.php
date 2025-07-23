@@ -39,7 +39,7 @@ class ItemDoInController extends Controller
 
         try {
             $file = $request->file('file');
-            Excel::import(new ItemDoInImport($request->do_in_id), $file, \Maatwebsite\Excel\Excel::XLSX);
+            Excel::import(new ItemDoInImport($do->id), $file, \Maatwebsite\Excel\Excel::XLSX);
             return response()->json(['data' => $do, 'message' => 'Success add item on do in'], 200);
         } catch (Exception $e) {
             return response()->json(['data' => $do, 'message' => $e->getMessage()], 500);
