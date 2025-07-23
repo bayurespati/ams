@@ -33,7 +33,7 @@ class ItemDoInController extends Controller
     //Add item do in with upload
     public function uploadItem(Request $request)
     {
-        $do = DoIn::where('uuid', $request->do_in_id);
+        $do = DoIn::where('uuid', $request->do_in_id)->first();
         if (!$do)
             return response()->json(['message' => 'Data do in not found'], 404);
 
