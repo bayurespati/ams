@@ -17,7 +17,6 @@ class Plan extends Model
 
     protected $hidden = [
         'id',
-        'created_at',
         'updated_at',
         'deleted_at'
     ];
@@ -30,5 +29,10 @@ class Plan extends Model
     public function item_variety()
     {
         return $this->belongsTo(ItemVariety::class, 'jenis_barang_id', 'id');
+    }
+
+    public function po()
+    {
+        return $this->hasMany(PO::class, 'plan_id', 'id');
     }
 }
