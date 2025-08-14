@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid');
             $table->bigInteger('po_id');
+            $table->bigInteger('owner_id');
             $table->string('no_do', 50)->unique();
             $table->string('lokasi_gudang');
             $table->date('tanggal_masuk');
             $table->string('no_gr');
-            $table->string('owner_id', 50);
             $table->string('owner_type', 20);
             $table->string('file_evidence', 100);
             $table->text('keterangan');
