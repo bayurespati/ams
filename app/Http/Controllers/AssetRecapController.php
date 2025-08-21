@@ -13,11 +13,22 @@ class AssetRecapController extends Controller
     public function upload(Request $request)
     {
         try {
+            // your insert/update code here
+        } catch (\Exception $e) {
+            dd($e->getMessage(), $e->getTraceAsString());
+        }
+        try {
             $file = $request->file('file');
             Excel::import(new AssetRecapImport, $file, \Maatwebsite\Excel\Excel::XLSX);
             return response()->json(['message' => 'Success upload data'], 200);
         } catch (Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+            return response()->json(
+                [
+                    'message' => $e->getMessage(),
+                    "tracing" => $e->getTraceAsString()
+                ],
+                500
+            );
         }
     }
 

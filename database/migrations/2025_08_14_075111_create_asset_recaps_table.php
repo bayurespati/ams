@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('capitalized_on');
             $table->bigInteger('acquisition_value');
             $table->bigInteger('acquisition_depreciation');
+            $table->bigInteger('book_value');
             $table->string('currency');
             $table->string('compnay_code');
             $table->string('business_area');
@@ -30,18 +31,20 @@ return new class extends Migration
             $table->string('base_unit_of_measure');
             $table->integer('useful_life');
             $table->integer('useful_life_in_periods');
-            $table->date('start_date_pbs');
-            $table->date('end_date_pbs');
+            $table->date('start_date_pbs')->nullable();
+            $table->date('end_date_pbs')->nullable();
             $table->string('location_1');
             $table->string('location_2');
             $table->integer('qty_location_customer');
             $table->integer('qty_location_pins');
             $table->integer('qty_locastion_warehouse');
-            $table->integer('verfication_not_found');
-            $table->integer('asset_group_id');
-            $table->text('description');
-            $table->boolean('is_project');
-            $table->string('project_name');
+            $table->integer('verified')->default(0);
+            $table->integer('verfication_not_found')->default(0);
+            $table->integer('not_verified')->default(0);
+            $table->string('asset_group');
+            $table->text('description')->nullable();
+            $table->string('is_project');
+            $table->string('project_name')->nullable();
             $table->timestamps();
         });
     }
