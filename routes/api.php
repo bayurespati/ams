@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AssetRecapController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompanyController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\ItemVarietyController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\POController;
 use App\Http\Controllers\WarehouseController;
+use App\Models\Asset;
 use App\Models\ItemDoIn;
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\Route;
@@ -132,4 +134,15 @@ Route::group(['prefix' => 'warehouses',], function () {
     Route::PATCH('', [WarehouseController::class, 'update']);
     Route::PATCH('/restore', [WarehouseController::class, 'restore']);
     Route::DELETE('', [WarehouseController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'asset-recap',], function () {
+    Route::GET('/detail', [AssetRecapController::class, 'getById']);
+    Route::GET('/garbage', [AssetRecapController::class, 'getGarbage']);
+    Route::GET('', [AssetRecapController::class, 'getAll']);
+    Route::POST('', [AssetRecapController::class, 'store']);
+    Route::POST('/upload', [AssetRecapController::class, 'upload']);
+    Route::PATCH('', [AssetRecapController::class, 'update']);
+    Route::PATCH('/restore', [AssetRecapController::class, 'restore']);
+    Route::DELETE('', [AssetRecapController::class, 'destroy']);
 });
