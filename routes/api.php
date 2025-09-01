@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AssetLabelController;
 use App\Http\Controllers\AssetRecapController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CityController;
@@ -145,4 +146,16 @@ Route::group(['prefix' => 'asset-recap',], function () {
     Route::PATCH('', [AssetRecapController::class, 'update']);
     Route::PATCH('/restore', [AssetRecapController::class, 'restore']);
     Route::DELETE('', [AssetRecapController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'asset-label',], function () {
+    Route::GET('/detail', [AssetLabelController::class, 'getById']);
+    Route::GET('/by-id-asset', [AssetLabelController::class, 'getByIdAsset']);
+    Route::GET('/garbage', [AssetLabelController::class, 'getGarbage']);
+    Route::GET('', [AssetLabelController::class, 'getAll']);
+    Route::POST('', [AssetLabelController::class, 'store']);
+    Route::POST('/upload', [AssetLabelController::class, 'upload']);
+    Route::PATCH('', [AssetLabelController::class, 'update']);
+    Route::PATCH('/restore', [AssetLabelController::class, 'restore']);
+    Route::DELETE('', [AssetLabelController::class, 'destroy']);
 });

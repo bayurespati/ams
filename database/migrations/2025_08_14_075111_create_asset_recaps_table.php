@@ -33,6 +33,7 @@ return new class extends Migration
             $table->integer('useful_life_in_periods');
             $table->date('start_date_pbs')->nullable();
             $table->date('end_date_pbs')->nullable();
+            $table->string('project_completion_status');
             $table->string('location_1');
             $table->string('location_2');
             $table->integer('qty_location_customer');
@@ -41,10 +42,20 @@ return new class extends Migration
             $table->integer('verified')->default(0);
             $table->integer('verfication_not_found')->default(0);
             $table->integer('not_verified')->default(0);
+            $table->integer('in_use')->default(0);
+            $table->integer('unused')->default(0);
+            $table->integer('lost')->default(0);
+            $table->integer('purchased_by_user')->default(0);
+            $table->integer('aktif')->default(0);
+            $table->integer('non_aktif')->default(0);
+            $table->string('asset_type');
+            $table->string('depreciation_method');
+            $table->string('fixed_asset');
             $table->string('asset_group');
             $table->text('description')->nullable();
             $table->string('is_project');
             $table->string('project_name')->nullable();
+            $table->string('asset_group_show')->nullable();
             $table->timestamps();
         });
     }
