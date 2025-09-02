@@ -27,6 +27,8 @@ return new class extends Migration
             $table->string('asset_class');
             $table->string('asset_class_name');
             $table->string('internal_order');
+            $table->string('am');
+            $table->string('pm');
             $table->integer('quantity');
             $table->string('base_unit_of_measure');
             $table->integer('useful_life');
@@ -53,6 +55,7 @@ return new class extends Migration
             $table->string('fixed_asset');
             $table->string('asset_group');
             $table->text('description')->nullable();
+            $table->text('description_2')->nullable();
             $table->string('is_project');
             $table->string('project_name')->nullable();
             $table->string('asset_group_show')->nullable();

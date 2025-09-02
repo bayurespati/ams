@@ -47,4 +47,10 @@ class AssetRecapController extends Controller
 
         return response()->json(['data' => $assetRecap, 'message' => 'Success update data'], 200);
     }
+
+    public function getIdAssets()
+    {
+        $assetRecap = AssetRecap::get()->pluck('id_asset');
+        return response()->json(['data' => $assetRecap, 'message' => 'Success get data'], 200);
+    }
 }

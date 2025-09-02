@@ -138,14 +138,9 @@ Route::group(['prefix' => 'warehouses',], function () {
 });
 
 Route::group(['prefix' => 'asset-recap',], function () {
-    Route::GET('/detail', [AssetRecapController::class, 'getById']);
-    Route::GET('/garbage', [AssetRecapController::class, 'getGarbage']);
-    Route::GET('', [AssetRecapController::class, 'getAll']);
-    Route::POST('', [AssetRecapController::class, 'store']);
+    Route::GET('/get-id-assets', [AssetRecapController::class, 'getIdAssets']);
     Route::POST('/upload', [AssetRecapController::class, 'upload']);
     Route::PATCH('', [AssetRecapController::class, 'update']);
-    Route::PATCH('/restore', [AssetRecapController::class, 'restore']);
-    Route::DELETE('', [AssetRecapController::class, 'destroy']);
 });
 
 Route::group(['prefix' => 'asset-label',], function () {
