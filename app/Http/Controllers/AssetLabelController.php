@@ -137,4 +137,54 @@ class AssetLabelController extends Controller
 
         return $codes;
     }
+
+    public function download(Request $request)
+    {
+        $asset_labels = AssetLabel::where('id_asset', $request->id_asset)->get();
+
+        // Lakukan perulangan untuk setiap aset untuk mengubah path barcode menjadi Base64
+        foreach ($asset_labels as $asset) {
+            // Pastikan file gambar ada di direktori public/storage atau lainnya
+            $imagePath = public_path('storage/' . $asset->barcode);
+
+
+            // Periksa apakah file ada sebelum mengonversinya
+            if (file_exists($imagePath)) {
+                // Baca file gambar dan ubah menjadi Base64
+                $asset["print_barcode"] = 'data:image/png;base64,' . base64_encode(file_get_contents($imagePath));
+            } else {
+                // Tangani kasus di mana file tidak ditemukan, misalnya dengan gambar default
+                $asset["print_barcode"] = null; // Atau ganti dengan gambar "not found"
+            }
+        }
+
+        // Menggunakan library PDF untuk mengkonversi view menjadi PDF
+        $pdf = app('dompdf.wrapper');
+        $pdf->loadView('print.asset_label', compact('asset_labels'));
+
+        // Mengembalikan file PDF untuk diunduh
+        return $pdf->download('label-aset-semua.pdf');
+    }
+
+    public function showDownload(Request $request)
+    {
+        $asset_labels = AssetLabel::where('id_asset', $request->id_asset)->get();
+        // Lakukan perulangan untuk setiap aset untuk mengubah path barcode menjadi Base64
+        foreach ($asset_labels as $asset) {
+            // Pastikan file gambar ada di direktori public/storage atau lainnya
+            $imagePath = public_path('storage/' . $asset->barcode);
+
+
+            // Periksa apakah file ada sebelum mengonversinya
+            if (file_exists($imagePath)) {
+                // Baca file gambar dan ubah menjadi Base64
+                $asset["print_barcode"] = 'data:image/png;base64,' . base64_encode(file_get_contents($imagePath));
+            } else {
+                // Tangani kasus di mana file tidak ditemukan, misalnya dengan gambar default
+                $asset["print_barcode"] = null; // Atau ganti dengan gambar "not found"
+            }
+        }
+
+        return view('print.asset_label', compact('asset_labels'));
+    }
 }

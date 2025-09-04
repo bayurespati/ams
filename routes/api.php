@@ -148,8 +148,10 @@ Route::group(['prefix' => 'asset-label',], function () {
     Route::GET('/by-id-asset', [AssetLabelController::class, 'getByIdAsset']);
     Route::GET('/garbage', [AssetLabelController::class, 'getGarbage']);
     Route::GET('', [AssetLabelController::class, 'getAll']);
+    Route::GET('/show-download', [AssetLabelController::class, 'showDownload']);
     Route::POST('', [AssetLabelController::class, 'store']);
     Route::POST('/upload', [AssetLabelController::class, 'upload']);
+    Route::POST('/download', [AssetLabelController::class, 'download']);
     Route::PATCH('', [AssetLabelController::class, 'update']);
     Route::PATCH('/restore', [AssetLabelController::class, 'restore']);
     Route::DELETE('', [AssetLabelController::class, 'destroy']);
