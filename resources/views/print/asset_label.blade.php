@@ -75,7 +75,7 @@
                         <img src="{{ $asset->print_barcode }}" alt="QR">
                     </div>
                     <div class="text">
-                        <div class="description">{{ $asset['description'] }}</div>
+                        <div class="description">{{ $asset['description_label'] }}</div>
                         <div class="label">{{ $asset['label'] }}</div>
                     </div>
                 </div>
