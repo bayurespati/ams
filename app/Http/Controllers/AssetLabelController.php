@@ -69,6 +69,8 @@ class AssetLabelController extends Controller
             $asset_label->id_asset = $request->id_asset;
             $asset_label->label = $label;
             $asset_label->internal_order = $request->internal_order;
+            $asset_label->description = $request->description;
+            $asset_label->description_label = $request->description_label;
             $asset_label->save();
         }
 
@@ -140,7 +142,7 @@ class AssetLabelController extends Controller
 
     public function download(Request $request)
     {
-        $asset_labels = AssetLabel::where('id_asset', $request->id_asset)->get();
+        $asset_labels = AssetLabel::where('id_asset', $request->id_asset)->where('status', 1)->get();
 
         // Lakukan perulangan untuk setiap aset untuk mengubah path barcode menjadi Base64
         foreach ($asset_labels as $asset) {
