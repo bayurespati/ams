@@ -35,8 +35,8 @@ class WarehouseController extends Controller
     public function getGarbage()
     {
         $warehouse = Warehouse::onlyTrashed()->get();
-
-        return response()->json(['data' => $warehouse, 'message' => 'Success get data garbage warehouse'], 200);
+        $data = WarehouseResource::collection($warehouse);
+        return response()->json(['data' => $data, 'message' => 'Success get data garbage warehouse'], 200);
     }
 
     //Store data
