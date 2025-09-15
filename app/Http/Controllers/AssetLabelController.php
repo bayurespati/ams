@@ -69,7 +69,6 @@ class AssetLabelController extends Controller
             $asset_label->id_asset = $request->id_asset;
             $asset_label->label = $label;
             $asset_label->internal_order = $request->internal_order;
-            $asset_label->description = $request->description;
             $asset_label->description_label = $request->description_label;
             $asset_label->save();
         }
@@ -129,7 +128,7 @@ class AssetLabelController extends Controller
 
         for ($i = 1; $i <= $qty; $i++) {
             $codes[] = sprintf(
-                "%s-%s-%04d-%04d",
+                "%s/%s/%04d-%04d",
                 $internal_order,
                 $id_asset,
                 $qty,
