@@ -13,16 +13,20 @@ return new class extends Migration
     {
         Schema::create('asset_labels', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid');
-            $table->string('label')->unique();
-            $table->string('sn')->unique()->nullable();
-            $table->string('condition')->nullable();
-            $table->string('location')->nullable();
-            $table->string('description')->nullable();
-            $table->string('description_label')->nullable();
-            $table->boolean('status')->default(false);
+            $table->string('label')->unique()->nullable();
             $table->string('id_asset');
             $table->string('internal_order');
+            $table->string('sn')->unique()->nullable();
+            $table->string('lease_type')->nullable();
+            $table->string('location_type')->nullable();
+            $table->string('address')->nullable();
+            $table->string('location_detail')->nullable();
+            $table->string('owner')->nullable();
+            $table->string('condition')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->string('description')->nullable();
+            $table->string('description_label')->nullable();
+            $table->boolean('status_barcode')->default(false);
             $table->string('barcode')->nullable();
             $table->timestamps();
             $table->softDeletes();

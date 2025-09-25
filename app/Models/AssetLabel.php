@@ -19,4 +19,9 @@ class AssetLabel extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    public function assetRecap()
+    {
+        return $this->belongsTo(AssetRecap::class, 'id_asset', 'id');
+    }
 }

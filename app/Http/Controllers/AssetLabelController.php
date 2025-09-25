@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAssetLabelRequest;
 use App\Http\Requests\UpdateAssetLabelRequest;
+use App\Imports\AssetLabelImport;
 use App\Models\AssetLabel;
+use App\Models\AssetRecap;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use Exception;
 
 class AssetLabelController extends Controller
 {
@@ -35,18 +39,9 @@ class AssetLabelController extends Controller
     //Get All
     public function getAll()
     {
+        $asset_recap = AssetRecap::withCount('assetLabels')->get();
 
-        $asset_label = DB::table('asset_labels')
-            ->select(
-                'internal_order',
-                'id_asset',
-                DB::raw('COUNT(*) as total'),
-                DB::raw("SUM(CASE WHEN barcode IS NOT NULL AND barcode <> '' THEN 1 ELSE 0 END) as barcode_count")
-            )
-            ->groupBy('internal_order', 'id_asset')
-            ->get();
-
-        return response()->json(['data' => $asset_label, 'message' => 'Success get data asset labels'], 200);
+        return response()->json(['data' => $asset_recap, 'message' => 'Success get data asset labels'], 200);
     }
 
     //Get Garbage
@@ -57,11 +52,56 @@ class AssetLabelController extends Controller
         return response()->json(['data' => $asset_label, 'message' => 'Success get data asset label'], 200);
     }
 
+    public function upload(Request $request)
+    {
+        try {
+            $asset = AssetRecap::where('id_asset', $request->id_asset)->first();
+            $asset_labeles_count = AssetLabel::where('id_asset', $request->id_asset)->get();
+
+            $spreadsheet = Excel::toArray(new AssetLabelImport($asset), $request->file('file'));
+
+            if (count($spreadsheet[0]) + $asset_labeles_count->count() > $asset->quantity) {
+                return response()->json(['message' => 'Quantity not match'], 400);
+            }
+
+            $file = $request->file('file');
+            Excel::import(new AssetLabelImport($asset), $file, \Maatwebsite\Excel\Excel::XLSX);
+
+
+            $asset_labeles = AssetLabel::where('id_asset', $request->id_asset)->get();
+            foreach ($asset_labeles as $index => $asset_label) {
+                $asset_label->label = $this->generateLabel($request->id_asset, $asset->quantity, $asset_label->internal_order, $index + 1);
+                $asset_label->save();
+            }
+
+            return response()->json(['message' => 'Success upload data'], 200);
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'message' => $e->getMessage(),
+                    "tracing" => $e->getTraceAsString()
+                ],
+                500
+            );
+        }
+    }
+
+    private function generateLabel($id_asset, $qty, $internal_order, $index)
+    {
+        return sprintf(
+            "%s / %s / %04d-%04d",
+            $internal_order,
+            $id_asset,
+            $qty,
+            $index
+        );
+    }
+
     //Store data
     public function store(StoreAssetLabelRequest $request)
     {
 
-        $labels = $this->generateLabel($request->id_asset, $request->qty, $request->internal_order);
+        $labels = $this->generateLabels($request->id_asset, $request->qty, $request->internal_order);
 
         foreach ($labels as $label) {
             $asset_label = new AssetLabel();
@@ -122,7 +162,7 @@ class AssetLabelController extends Controller
         return response()->json(['data' => $model, 'message' => 'Success restore data asset label'], 200);
     }
 
-    private function generateLabel($id_asset, $qty, $internal_order)
+    private function generateLabels($id_asset, $qty, $internal_order)
     {
         $codes = [];
 
