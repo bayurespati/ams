@@ -28,6 +28,7 @@ class AssetLabelImport implements ToModel, WithStartRow
     {
         try {
             $asset_label = new AssetLabel();
+            $asset_label->uuid = Str::uuid();
             $asset_label->id_asset = $this->asset_recap->id_asset;
             $asset_label->internal_order = $this->asset_recap->internal_order;
             $asset_label->sn = $row[8];

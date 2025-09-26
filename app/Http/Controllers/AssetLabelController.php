@@ -20,7 +20,7 @@ class AssetLabelController extends Controller
     //Get By id
     public function getById(Request $request)
     {
-        $asset_label = AssetLabel::where('id', $request->id)->first();
+        $asset_label = AssetLabel::where('uuid', $request->id)->first();
         if (!$asset_label)
             return response()->json(['data' => $asset_label, 'message' => 'Data not found'], 404);
 
@@ -114,29 +114,10 @@ class AssetLabelController extends Controller
         );
     }
 
-    //Store data
-    public function store(StoreAssetLabelRequest $request)
-    {
-
-        $labels = $this->generateLabels($request->id_asset, $request->qty, $request->internal_order);
-
-        foreach ($labels as $label) {
-            $asset_label = new AssetLabel();
-            $asset_label->id = Str::id();
-            $asset_label->id_asset = $request->id_asset;
-            $asset_label->label = $label;
-            $asset_label->internal_order = $request->internal_order;
-            $asset_label->description_label = $request->description_label;
-            $asset_label->save();
-        }
-
-        return response()->json(['data' => $request->id_asset, 'message' => 'Success store data asset label'], 200);
-    }
-
     //Update data
     public function update(Request $request)
     {
-        $asset_label = AssetLabel::where('id', $request->id)->first();
+        $asset_label = AssetLabel::where('uuid', $request->id)->first();
         if (!$asset_label)
             return response()->json(['data' => $asset_label, 'message' => 'Data not found'], 404);
         $request->validate((new UpdateAssetLabelRequest())->rules($asset_label));
@@ -167,7 +148,7 @@ class AssetLabelController extends Controller
     //Delete data
     public function destroy(Request $request)
     {
-        $model = AssetLabel::where('id', $request->id)->first();
+        $model = AssetLabel::where('uuid', $request->id)->first();
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
 
@@ -178,7 +159,7 @@ class AssetLabelController extends Controller
     //Restore data softdelete
     public function restore(Request $request)
     {
-        $model = AssetLabel::withTrashed()->where('id', $request->id)->first();
+        $model = AssetLabel::withTrashed()->where('uuid', $request->id)->first();
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
         $model->restore();

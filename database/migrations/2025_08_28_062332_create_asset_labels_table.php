@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('asset_labels', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid');
             $table->string('label')->unique()->nullable();
             $table->string('id_asset');
             $table->string('internal_order');
