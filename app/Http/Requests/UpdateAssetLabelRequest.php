@@ -24,7 +24,8 @@ class UpdateAssetLabelRequest extends FormRequest
         return [
             'sn' => 'required|unique:asset_labels,sn,' . $model->id,
             'condition' => 'required',
-            'location' => 'required',
+            'location_type' => 'required',
+            'address' => 'required',
             'description_label' => 'required'
         ];
     }
