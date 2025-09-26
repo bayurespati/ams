@@ -20,7 +20,7 @@ class AssetLabelController extends Controller
     //Get By id
     public function getById(Request $request)
     {
-        $asset_label = AssetLabel::where('uuid', $request->id)->first();
+        $asset_label = AssetLabel::where('id', $request->id)->first();
         if (!$asset_label)
             return response()->json(['data' => $asset_label, 'message' => 'Data not found'], 404);
 
@@ -122,7 +122,7 @@ class AssetLabelController extends Controller
 
         foreach ($labels as $label) {
             $asset_label = new AssetLabel();
-            $asset_label->uuid = Str::uuid();
+            $asset_label->id = Str::id();
             $asset_label->id_asset = $request->id_asset;
             $asset_label->label = $label;
             $asset_label->internal_order = $request->internal_order;
@@ -136,7 +136,7 @@ class AssetLabelController extends Controller
     //Update data
     public function update(Request $request)
     {
-        $asset_label = AssetLabel::where('uuid', $request->id)->first();
+        $asset_label = AssetLabel::where('id', $request->id)->first();
         if (!$asset_label)
             return response()->json(['data' => $asset_label, 'message' => 'Data not found'], 404);
         $request->validate((new UpdateAssetLabelRequest())->rules($asset_label));
@@ -167,7 +167,7 @@ class AssetLabelController extends Controller
     //Delete data
     public function destroy(Request $request)
     {
-        $model = AssetLabel::where('uuid', $request->id)->first();
+        $model = AssetLabel::where('id', $request->id)->first();
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
 
@@ -178,7 +178,7 @@ class AssetLabelController extends Controller
     //Restore data softdelete
     public function restore(Request $request)
     {
-        $model = AssetLabel::withTrashed()->where('uuid', $request->id)->first();
+        $model = AssetLabel::withTrashed()->where('id', $request->id)->first();
         if (!$model)
             return response()->json(['data' => $model, 'message' => 'Data not found'], 404);
         $model->restore();
