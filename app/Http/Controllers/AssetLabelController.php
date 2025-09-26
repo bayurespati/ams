@@ -142,12 +142,18 @@ class AssetLabelController extends Controller
         $request->validate((new UpdateAssetLabelRequest())->rules($asset_label));
         $asset_label->sn = $request->sn;
         $asset_label->condition = $request->condition;
-        $asset_label->location = $request->location;
+        $asset_label->location_type = $request->location_type;
+        $asset_label->lease_type = $request->lease_type;
+        $asset_label->location_detail = $request->location_detail;
+        $asset_label->owner = $request->owner;
+        $asset_label->condition = $request->condition;
+        $asset_label->is_active = strtolower($request->is_active) === 'aktif' ? true : false;
+        $asset_label->address = $request->address;
         $asset_label->description = $request->description;
         $asset_label->description_label = $request->description_label;
-        $asset_label->status = $request->status;
+        $asset_label->status_barcode = $request->status_barcode;
 
-        if ($request->status) {
+        if ($request->status_barcode) {
             $file_name = 'qrcodes/barcode_' . $asset_label->id . '.png';
             Storage::disk('public')->put($file_name, QrCode::format('png')->size(200)->generate($asset_label->label));
             $asset_label->barcode = $file_name;
