@@ -55,23 +55,40 @@ class AssetLabelController extends Controller
     public function upload(Request $request)
     {
         try {
+            // Find the asset record and get the count of existing labels.
+            // It's more efficient to get the count directly.
             $asset = AssetRecap::where('id_asset', $request->id_asset)->first();
-            $asset_labeles_count = AssetLabel::where('id_asset', $request->id_asset)->get();
-
+            $existing_labels_count = AssetLabel::where('id_asset', $request->id_asset)->count();
             $spreadsheet = Excel::toArray(new AssetLabelImport($asset), $request->file('file'));
+            $count_data = count($spreadsheet[0]);
 
-            if (count($spreadsheet[0]) + $asset_labeles_count->count() > $asset->quantity) {
+            // Validate the total quantity
+            if ($count_data + $existing_labels_count > $asset->quantity) {
                 return response()->json(['message' => 'Quantity not match'], 400);
             }
 
+            // Import the file first
             $file = $request->file('file');
             Excel::import(new AssetLabelImport($asset), $file, \Maatwebsite\Excel\Excel::XLSX);
 
+            // Get ALL the labels for the asset and sort them
+            // This is a safer approach to get all records, then find the latest ones
+            $all_asset_labels = AssetLabel::where('id_asset', $request->id_asset)->whereNull('label')
+                ->orderBy('id', 'asc') // Sort all labels by ID
+                ->get();
 
-            $asset_labeles = AssetLabel::where('id_asset', $request->id_asset)->get();
-            foreach ($asset_labeles as $index => $asset_label) {
-                $asset_label->label = $this->generateLabel($request->id_asset, $asset->quantity, $asset_label->internal_order, $index + 1);
-                $asset_label->save();
+            // Start index from the total count of existing labels
+            $start_index = $existing_labels_count + 1;
+
+            // Loop through ALL labels and update the new ones
+            foreach ($all_asset_labels as $index => $asset_label) {
+                // Check if this is one of the newly added labels
+                // A simple way is to check if the label column is empty
+                if (empty($asset_label->label)) {
+                    $asset_label->label = $this->generateLabel($request->id_asset, $asset->quantity, $asset_label->internal_order, $start_index);
+                    $asset_label->save();
+                    $start_index++; // Increment the index for the next new label
+                }
             }
 
             return response()->json(['message' => 'Success upload data'], 200);
