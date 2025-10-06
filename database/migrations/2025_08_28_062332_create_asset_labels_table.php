@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('sn')->unique()->nullable();
             $table->string('lease_type')->nullable();
             $table->string('location_type')->nullable();
+            $table->string('location_type_operation')->nullable();
             $table->string('address')->nullable();
             $table->string('location_detail')->nullable();
             $table->string('owner')->nullable();
