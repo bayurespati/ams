@@ -7,6 +7,7 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DismantelController;
 use App\Http\Controllers\DoInController;
 use App\Http\Controllers\ItemDoInController;
 use App\Http\Controllers\ItemTypeController;
@@ -151,6 +152,7 @@ Route::group(['prefix' => 'asset-label',], function () {
     Route::GET('/show-download', [AssetLabelController::class, 'showDownload']);
     Route::POST('', [AssetLabelController::class, 'store']);
     Route::POST('/upload', [AssetLabelController::class, 'upload']);
+    Route::POST('/downloads', [AssetLabelController::class, 'downloads']);
     Route::POST('/download', [AssetLabelController::class, 'download']);
     Route::PATCH('', [AssetLabelController::class, 'update']);
     Route::PATCH('/restore', [AssetLabelController::class, 'restore']);

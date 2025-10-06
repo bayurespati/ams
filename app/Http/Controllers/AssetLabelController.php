@@ -39,7 +39,15 @@ class AssetLabelController extends Controller
     //Get All
     public function getAll()
     {
-        $asset_recap = AssetRecap::withCount('assetLabels')->get();
+        // $asset_recap = AssetRecap::withCount('assetLabels')->get();
+        $asset_recap = AssetRecap::withCount([
+            // Total count of all labels (optional)
+            'assetLabels',
+            // Count where status_barcode is 1 (e.g., 'AVAILABLE')
+            'assetLabels as barcode_count' => function ($query) {
+                $query->where('status_barcode', 1);
+            },
+        ])->get();
 
         return response()->json(['data' => $asset_recap, 'message' => 'Success get data asset labels'], 200);
     }
@@ -102,18 +110,6 @@ class AssetLabelController extends Controller
             );
         }
     }
-
-    private function generateLabel($id_asset, $qty, $internal_order, $index)
-    {
-        return sprintf(
-            "%s / %s / %04d-%04d",
-            $internal_order,
-            $id_asset,
-            $qty,
-            $index
-        );
-    }
-
     //Update data
     public function update(Request $request)
     {
@@ -166,26 +162,9 @@ class AssetLabelController extends Controller
         return response()->json(['data' => $model, 'message' => 'Success restore data asset label'], 200);
     }
 
-    private function generateLabels($id_asset, $qty, $internal_order)
+    public function downloads(Request $request)
     {
-        $codes = [];
-
-        for ($i = 1; $i <= $qty; $i++) {
-            $codes[] = sprintf(
-                "%s/%s/%04d-%04d",
-                $internal_order,
-                $id_asset,
-                $qty,
-                $i
-            );
-        }
-
-        return $codes;
-    }
-
-    public function download(Request $request)
-    {
-        $asset_labels = AssetLabel::where('id_asset', $request->id_asset)->where('status', 1)->get();
+        $asset_labels = AssetLabel::where('id_asset', $request->id_asset)->where('status_barcode', 1)->get();
 
         // Lakukan perulangan untuk setiap aset untuk mengubah path barcode menjadi Base64
         foreach ($asset_labels as $asset) {
@@ -231,5 +210,33 @@ class AssetLabelController extends Controller
         }
 
         return view('print.asset_label', compact('asset_labels'));
+    }
+
+    private function generateLabels($id_asset, $qty, $internal_order)
+    {
+        $codes = [];
+
+        for ($i = 1; $i <= $qty; $i++) {
+            $codes[] = sprintf(
+                "%s/%s/%04d-%04d",
+                $internal_order,
+                $id_asset,
+                $qty,
+                $i
+            );
+        }
+
+        return $codes;
+    }
+
+    private function generateLabel($id_asset, $qty, $internal_order, $index)
+    {
+        return sprintf(
+            "%s / %s / %04d-%04d",
+            $internal_order,
+            $id_asset,
+            $qty,
+            $index
+        );
     }
 }
