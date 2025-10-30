@@ -63,7 +63,6 @@ class DoInController extends Controller
         return response()->json(['data' => $do_in->load('po'), 'message' => 'Success store data do in'], 200);
     }
 
-
     //Update data
     public function update(Request $request)
     {

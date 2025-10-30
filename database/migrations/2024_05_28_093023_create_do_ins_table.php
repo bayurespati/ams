@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('no_do', 50)->unique();
             $table->string('lokasi_gudang');
             $table->date('tanggal_masuk');
-            $table->string('no_gr');
+            $table->string('no_gr')->nullable();
             $table->string('penerima', 20);
             $table->string('file_evidence', 100);
             $table->string('file_foto_terima', 100);
