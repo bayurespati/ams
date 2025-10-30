@@ -14,6 +14,7 @@ class AssetRecapController extends Controller
     {
         try {
             $file = $request->file('file');
+            AssetRecap::truncate();
             Excel::import(new AssetRecapImport, $file, \Maatwebsite\Excel\Excel::XLSX);
             return response()->json(['message' => 'Success upload data'], 200);
         } catch (Exception $e) {

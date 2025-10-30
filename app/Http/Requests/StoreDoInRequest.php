@@ -25,10 +25,10 @@ class StoreDoInRequest extends FormRequest
             'po_id' => 'required',
             'no_do' => 'required|unique:do_in,no_do',
             'lokasi_gudang' => 'required',
-            'owner_id' => 'required',
             'tanggal_masuk' => 'required',
-            'no_gr' => 'required',
-            'file_evidence' => 'required'
+            'file_evidence' => 'required',
+            'file_foto_terima' => 'required',
+            'penerima' => 'required'
         ];
     }
 }

@@ -8,7 +8,7 @@ use App\Http\Resources\DoInResource;
 use App\Imports\AddItemDoInImport;
 use App\Models\DoIn;
 use App\Models\PO;
-use Exception;
+use App\Models\Company;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -45,21 +45,19 @@ class DoInController extends Controller
     public function store(StoreDoInRequest $request)
     {
         $po = PO::where('uuid', "=", $request->po_id)->first();
-        $owner = Owner::where('uuid', "=", $request->owner_id)->first();
         if (!$po)
             return response()->json(['message' => 'Data po not found'], 404);
-        if (!$owner)
-            return response()->json(['message' => 'Data owner not found'], 404);
         $do_in = new DoIn();
         $do_in->uuid = Str::uuid();
         $do_in->po_id = $po->id;
         $do_in->no_do = $request->no_do;
         $do_in->lokasi_gudang = $request->lokasi_gudang;
-        $do_in->owner_id = $owner->id;
         $do_in->keterangan = $request->keterangan;
         $do_in->tanggal_masuk = $request->tanggal_masuk;
         $do_in->no_gr = $request->no_gr;
+        $do_in->penerima = $request->penerima;
         $do_in->file_evidence = Storage::disk('public')->put('do_in', $request->file_evidence);
+        $do_in->file_foto_terima = Storage::disk('public')->put('do_in', $request->file_foto_terima);
         $do_in->save();
 
         return response()->json(['data' => $do_in->load('po'), 'message' => 'Success store data do in'], 200);
@@ -70,24 +68,22 @@ class DoInController extends Controller
     public function update(Request $request)
     {
         $po = PO::where('uuid', "=", $request->po_id)->first();
-        $owner = Owner::where('uuid', "=", $request->owner_id)->first();
         $do_in = DoIn::where('uuid', "=", $request->id)->first();
         if (!$po)
             return response()->json(['message' => 'Data po not found'], 404);
-        if (!$owner)
-            return response()->json(['message' => 'Data owner not found'], 404);
         if (!$do_in)
             return response()->json(['data' => $do_in, 'message' => 'Data not found'], 404);
         $request->validate((new UpdateDoInRequest())->rules($do_in));
         $do_in->po_id = $po->id;
         $do_in->no_do = $request->no_do;
         $do_in->lokasi_gudang = $request->lokasi_gudang;
-        $do_in->owner_id = $owner->id;
         $do_in->keterangan = $request->keterangan;
         $do_in->tanggal_masuk = $request->tanggal_masuk;
         $do_in->no_gr = $request->no_gr;
         if ($request->file_evidence)
             $do_in->file_evidence = Storage::disk('public')->put('do_in', $request->file_evidence);
+        if ($request->file_foto_terima)
+            $do_in->file_foto_terima = Storage::disk('public')->put('do_in', $request->file_foto_terima);
         $do_in->save();
         $do_in->load('po');
         $data = new DoInResource($do_in);

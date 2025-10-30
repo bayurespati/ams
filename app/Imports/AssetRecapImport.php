@@ -23,7 +23,6 @@ class AssetRecapImport implements ToModel, WithStartRow
      */
     public function model(array $row)
     {
-        // dd();
         $item = new AssetRecap();
         $item->id_asset = $row[0];
         $item->asset_description = $row[1];

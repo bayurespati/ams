@@ -56,7 +56,6 @@ class PlanController extends Controller
     //Store data
     public function store(StorePlanRequest $request)
     {
-
         $tipe_barang = ItemType::where('uuid', $request->tipe_barang_id)->first();
         $jenis_barang = ItemVariety::where('uuid', $request->jenis_barang_id)->first();
         if (!$tipe_barang)
