@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ItemDoInResource;
 use App\Imports\ItemDoInImport;
+use App\Models\Company;
 use App\Models\DoIn;
 use App\Models\ItemDoIn;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Str;
 
@@ -49,19 +51,41 @@ class ItemDoInController extends Controller
     //Add item do in on json
     public function addItem(Request $request)
     {
+        // Data array dari frontend
+        $items = $request->input('items');
+        $allOwnerUuids = array_column($items, 'owner_id');
+        $uniqueOwnerUuids = array_unique($allOwnerUuids);
+        $ownerMapping = Company::whereIn('uuid', $uniqueOwnerUuids)->pluck('id', 'uuid');
+
+        $itemsDenganIdBaru = [];
+        $ownerMappingArray = $ownerMapping->toArray();
+        foreach ($items as $item) {
+            $uuid = $item['owner_id'];
+            // Cari ID database yang sesuai dari array mapping (tidak ada query database di sini!)
+            if (isset($ownerMappingArray[$uuid])) {
+                $databaseId = $ownerMappingArray[$uuid];
+                $item['owner_id'] = $databaseId;
+            }
+            $itemsDenganIdBaru[] = $item;
+        }
+
         $do_in = DoIn::where('uuid', $request->do_in_id)->first();
         if (!$do_in)
             return response()->json(['message' => 'Data do in not found'], 404);
 
         try {
-            foreach ($request->items as $item) {
+            DB::beginTransaction();
+            foreach ($itemsDenganIdBaru as $item) {
                 $itemDoIn = new ItemDoIn();
                 $itemDoIn->do_in_id = $do_in->id;
                 $itemDoIn->uuid = Str::uuid();
                 $itemDoIn->sn = $item["sn"];
                 $itemDoIn->jumlah = $item["jumlah"];
+                $itemDoIn->nama = $item["nama_barang"];
+                $itemDoIn->owner_id = $item["owner_id"];
                 $itemDoIn->save();
             }
+            DB::commit();
             return response()->json(['data' => $do_in, 'message' => 'Success add item on do in'], 200);
         } catch (Exception $e) {
             return response()->json(['data' => $do_in, 'message' => $e], 500);
