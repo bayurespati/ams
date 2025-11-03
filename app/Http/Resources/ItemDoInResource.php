@@ -19,8 +19,10 @@ class ItemDoInResource extends JsonResource
             "sn" => $this->sn,
             "jumlah" => $this->jumlah,
             "is_verified" => $this->is_verified,
+            "owner_id" => $this->owner?->uuid,
+            "owner" => $this->owner,
             'do_in_id' => $this->do_in?->uuid,
-            'do_in' => $this->do_in
+            'do_in' => $this->do_in,
         ];
     }
 }

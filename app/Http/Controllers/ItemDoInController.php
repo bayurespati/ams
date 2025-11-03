@@ -17,7 +17,7 @@ class ItemDoInController extends Controller
 {
     public function getById(Request $request)
     {
-        $item_do_in = ItemDoIn::where('uuid', $request->id)->with('do_in')->first();
+        $item_do_in = ItemDoIn::where('uuid', $request->id)->with(['do_in', 'owner'])->first();
         $data = new ItemDoInResource($item_do_in);
         if (!$item_do_in)
             return response()->json(['data' => $data, 'message' => 'Data not found'], 404);
