@@ -16,6 +16,7 @@ class ItemDoInResource extends JsonResource
     {
         return [
             "uuid" => $this->uuid,
+            "nama_barang" => $this->nama,
             "sn" => $this->sn,
             "jumlah" => $this->jumlah,
             "is_verified" => $this->is_verified,
