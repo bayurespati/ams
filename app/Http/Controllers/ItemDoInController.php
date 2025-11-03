@@ -70,6 +70,7 @@ class ItemDoInController extends Controller
         }
 
         $do_in = DoIn::where('uuid', $request->do_in_id)->first();
+
         if (!$do_in)
             return response()->json(['message' => 'Data do in not found'], 404);
 
@@ -110,10 +111,15 @@ class ItemDoInController extends Controller
     public function update(Request $request)
     {
         $item_do_in = ItemDoIn::where('uuid', $request->id)->first();
+        $owner = Company::where('uuid', $request->do_in_id)->first();
         if (!$item_do_in)
             return response()->json(['data' => $item_do_in, 'message' => 'Data not found'], 404);
+        if (!$owner)
+            return response()->json(['message' => 'Data owner not found'], 404);
         $item_do_in->sn = $request->sn;
         $item_do_in->jumlah = $request->jumlah;
+        $item_do_in->nama = $request->nama_barang;
+        $item_do_in->owner_id = $owner->id;
         $item_do_in->save();
         $item_do_in->load('do_in');
         $data = new ItemDoInResource($item_do_in);
