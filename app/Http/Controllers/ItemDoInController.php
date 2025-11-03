@@ -112,7 +112,7 @@ class ItemDoInController extends Controller
     public function update(Request $request)
     {
         $item_do_in = ItemDoIn::where('uuid', $request->id)->first();
-        $owner = Company::where('uuid', $request->do_in_id)->first();
+        $owner = Company::where('uuid', $request->owner_id)->first();
         if (!$item_do_in)
             return response()->json(['data' => $item_do_in, 'message' => 'Data not found'], 404);
         if (!$owner)
