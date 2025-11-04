@@ -24,4 +24,9 @@ class ItemDoIn extends Model
     {
         return $this->belongsTo(DoIn::class, 'do_in_id', 'id')->withTrashed();
     }
+
+    public function owner()
+    {
+        return $this->belongsTo(Company::class, 'owner_id', 'id')->withTrashed();
+    }
 }

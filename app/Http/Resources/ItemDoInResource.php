@@ -16,11 +16,14 @@ class ItemDoInResource extends JsonResource
     {
         return [
             "uuid" => $this->uuid,
+            "nama_barang" => $this->nama,
             "sn" => $this->sn,
             "jumlah" => $this->jumlah,
             "is_verified" => $this->is_verified,
+            "owner_id" => $this->owner?->uuid,
+            "owner" => $this->owner,
             'do_in_id' => $this->do_in?->uuid,
-            'do_in' => $this->do_in
+            'do_in' => $this->do_in,
         ];
     }
 }
