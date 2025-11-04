@@ -11,7 +11,6 @@ class Company extends Model
     use SoftDeletes;
 
     protected $table = 'companies';
-
     protected $guarded = [];
 
     protected $hidden = [
@@ -20,4 +19,9 @@ class Company extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    public function plans()
+    {
+        return $this->belongsToMany(Plan::class, 'company_plan', 'company_id', 'plan_id')->withTimestamps();
+    }
 }

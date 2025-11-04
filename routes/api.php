@@ -20,8 +20,6 @@ use App\Models\ItemDoIn;
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\Route;
 
-
-
 Route::group(['prefix' => 'dashboard',], function () {
     Route::GET('/get-plans', [DashboardController::class, 'getPlans']);
 });
