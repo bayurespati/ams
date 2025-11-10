@@ -18,12 +18,12 @@ class DoInResource extends JsonResource
             "uuid" => $this->uuid,
             "no_do" => $this->no_do,
             "lokasi_gudang" => $this->lokasi_gudang,
-            "owner_id" => $this->owner_id,
-            "owner_type" => $this->owner_type,
             "keterangan" => $this->keterangan,
             "tanggal_masuk" => $this->tanggal_masuk,
+            "penerima" => $this->penerima,
             "no_gr" => $this->no_gr,
             "file_evidence" => $this->file_evidence,
+            "file_foto_terima" => $this->file_foto_terima,
             'po_id' => $this->po?->uuid,
             'po' => $this->po
         ];

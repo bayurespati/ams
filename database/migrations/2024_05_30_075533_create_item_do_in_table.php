@@ -17,7 +17,9 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid');
             $table->bigInteger('do_in_id');
-            $table->string('sn')->nullable();
+            $table->bigInteger('owner_id');
+            $table->string('nama');
+            $table->string('sn')->nullable()->unique();
             $table->integer('jumlah');
             $table->tinyInteger('is_verified')->default(0);
             $table->timestamps();

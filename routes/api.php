@@ -14,6 +14,7 @@ use App\Http\Controllers\ItemTypeController;
 use App\Http\Controllers\ItemVarietyController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\POController;
+use App\Http\Controllers\StarController;
 use App\Http\Controllers\WarehouseController;
 use App\Models\Asset;
 use App\Models\ItemDoIn;
@@ -22,6 +23,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'dashboard',], function () {
     Route::GET('/get-plans', [DashboardController::class, 'getPlans']);
+});
+
+Route::group(['prefix' => 'star',], function () {
+    Route::GET('/get-projects', [StarController::class, 'getProject']);
 });
 
 Route::group(['prefix' => 'plans',], function () {
