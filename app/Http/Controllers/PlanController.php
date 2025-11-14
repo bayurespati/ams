@@ -7,6 +7,7 @@ use App\Http\Requests\UpdatePlanRequest;
 use App\Models\ItemType;
 use App\Models\ItemVariety;
 use App\Models\Plan;
+use App\Models\PlanItem; //Penambahan untuk mengakses model PlanItem
 use App\Models\Company;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -18,8 +19,8 @@ class PlanController extends Controller
 {
     // Get By id
     public function getById(Request $request)
-    {
-        $plan = Plan::with(['item_type', 'item_variety', 'companies'])->where('uuid', $request->id)->first();
+    {      
+        $plan = Plan::with(['items.item_type', 'items.item_variety', 'companies'])->where('uuid', $request->id)->first();
         if (!$plan)
             return response()->json(['data' => $plan, 'message' => 'Data not found'], 404);
 
@@ -28,16 +29,20 @@ class PlanController extends Controller
             "project_id" => $plan->project_id,
             "project_name" => $plan->project_name,
             "judul" => $plan->judul,
-            "nama_barang" => $plan->nama_barang,
-            "jumlah_barang" => $plan->jumlah_barang,
             "is_lop" => (bool)$plan->is_lop,
             "file_prpo" => $plan->file_prpo,
             "no_prpo" => $plan->no_prpo,
-            'jenis_barang_id' => optional($plan->item_variety)->uuid,
-            'tipe_barang_id' => optional($plan->item_type)->uuid,
-            'mitra' => $plan->companies->map(function ($c) {
-                return ['uuid' => $c->uuid, 'name' => $c->name];
+            // Mapping data items pada Plan
+            'items' => $plan->items->map(function ($it) {
+                return [
+                    'tipe_barang_id' => optional($it->item_type)->uuid,
+                    'jenis_barang_id' => optional($it->item_variety)->uuid,
+                    'nama_barang' => $it->nama_barang,
+                    'jumlah_barang' => $it->jumlah_barang,
+                ];
             }),
+            // Mapping data mitra pada Plan
+            'mitra' => $plan->companies->map(function ($c) { return ['uuid'=>$c->uuid,'name'=>$c->name]; }),
             'created_at' => $plan->created_at,
         ];
 
@@ -45,21 +50,25 @@ class PlanController extends Controller
     }
 
     // Get All
-    public function getAll()
+     public function getAll()
     {
-        $plans = Plan::with(['item_type', 'item_variety', 'companies'])->get()->map(function ($plan) {
+        $plans = Plan::with(['items.item_type', 'items.item_variety', 'companies'])->get()->map(function ($plan) {
             return [
                 "uuid" => $plan->uuid,
                 "project_id" => $plan->project_id,
                 "project_name" => $plan->project_name,
                 "judul" => $plan->judul,
-                "nama_barang" => $plan->nama_barang,
-                "jumlah_barang" => $plan->jumlah_barang,
                 "is_lop" => (bool)$plan->is_lop,
                 "file_prpo" => $plan->file_prpo,
                 "no_prpo" => $plan->no_prpo,
-                'jenis_barang_id' => optional($plan->item_variety)->uuid,
-                'tipe_barang_id' => optional($plan->item_type)->uuid,
+                // Mapping items pada setiap Plan
+                'items' => $plan->items->map(fn($it)=> [
+                    'tipe_barang_id' => optional($it->item_type)->uuid,
+                    'jenis_barang_id' => optional($it->item_variety)->uuid,
+                    'nama_barang' => $it->nama_barang,
+                    'jumlah_barang' => $it->jumlah_barang,
+                ]),
+                // Mapping mitra pada setiap Plan
                 'mitra' => $plan->companies->map(fn($c)=> ['uuid'=>$c->uuid, 'name'=>$c->name]),
                 'created_at' => $plan->created_at,
             ];
@@ -71,15 +80,6 @@ class PlanController extends Controller
     // Store data
     public function store(StorePlanRequest $request)
     {
-        \Log::info($request->all());
-        $tipe_barang = ItemType::where('uuid', $request->tipe_barang_id)->first();
-        $jenis_barang = ItemVariety::where('uuid', $request->jenis_barang_id)->first();
-        if (!$tipe_barang)
-            return response()->json(['message' => 'Data tipe barang not found'], 404);
-        if (!$jenis_barang)
-            return response()->json(['message' => 'Data jenis barang not found'], 404);
-
-        // resolve company uuids -> ids
         $companies = Company::whereIn('uuid', $request->company_ids)->get();
         if ($companies->count() !== count($request->company_ids)) {
             return response()->json(['message' => 'Salah satu atau lebih company tidak ditemukan'], 404);
@@ -89,20 +89,15 @@ class PlanController extends Controller
         $plan->uuid = (string) Str::uuid();
         $plan->is_lop = (bool) $request->is_lop;
 
-        // Handle project based on LOP/Non-LOP
         if ($plan->is_lop) {
-            $plan->project_id = $request->project_id; // Ambil project_id yang sudah ada
-            $plan->project_name = null; // Tidak perlu project_name
+            $plan->project_id = $request->project_id;
+            $plan->project_name = null;
         } else {
-            $plan->project_id = null; // Tidak ada project_id
-            $plan->project_name = $request->project_name; // Ambil project_name dari input
+            $plan->project_id = null;
+            $plan->project_name = $request->project_name;
         }
 
         $plan->judul = $request->judul;
-        $plan->nama_barang = $request->nama_barang;
-        $plan->jenis_barang_id = $jenis_barang->id;
-        $plan->tipe_barang_id = $tipe_barang->id;
-        $plan->jumlah_barang = $request->jumlah_barang;
         $plan->no_prpo = $request->no_prpo;
 
         if ($request->hasFile('file_prpo')) {
@@ -111,11 +106,30 @@ class PlanController extends Controller
 
         $plan->save();
 
-        // attach mitra
+        // Melakukan iterasi pada setiap item yang dikirim dari request
+        foreach ($request->items as $it) {
+            // Mencari tipe barang berdasarkan uuid
+            $tipe = ItemType::where('uuid', $it['tipe_barang_id'])->first();
+            // Mencari jenis barang berdasarkan uuid
+            $jenis = ItemVariety::where('uuid', $it['jenis_barang_id'])->first();
+            if (!$tipe || !$jenis) {
+                $plan->delete();
+                return response()->json(['message' => 'Tipe atau jenis barang tidak ditemukan'], 404);
+            }
+            // Membuat PlanItem baru
+            PlanItem::create([
+                'plan_id' => $plan->id,
+                'tipe_barang_id' => $tipe->id,
+                'jenis_barang_id' => $jenis->id,
+                'nama_barang' => $it['nama_barang'],
+                'jumlah_barang' => $it['jumlah_barang'],
+            ]);
+        }
+
         $plan->companies()->attach($companies->pluck('id')->toArray());
 
         return response()->json([
-            'data' => $plan->load(['companies', 'item_type', 'item_variety']),
+            'data' => $plan->load(['companies','items.item_type','items.item_variety']),
             'message' => 'Success store data plan'
         ], 200);
     }
@@ -123,50 +137,54 @@ class PlanController extends Controller
     // Update data
     public function update(Request $request)
     {
-        $tipe_barang = ItemType::where('uuid', $request->tipe_barang_id)->first();
-        $jenis_barang = ItemVariety::where('uuid', $request->jenis_barang_id)->first();
         $plan = Plan::where('uuid', $request->id)->first();
-
-        if (!$tipe_barang)
-            return response()->json(['message' => 'Data tipe barang not found'], 404);
-        if (!$jenis_barang)
-            return response()->json(['message' => 'Data jenis barang not found'], 404);
-        if (!$plan)
-            return response()->json(['data' => $plan, 'message' => 'Data not found'], 404);
+        if (!$plan) return response()->json(['data'=>$plan,'message'=>'Data not found'], 404);
 
         $request->validate((new UpdatePlanRequest())->rules($plan));
 
-        // resolve company uuids -> ids
         $companies = Company::whereIn('uuid', $request->company_ids ?? [])->get();
         if ($companies->count() !== count($request->company_ids ?? [])) {
             return response()->json(['message' => 'Salah satu atau lebih company tidak ditemukan'], 404);
         }
 
-        // Tangani project sesuai is_lop
-        $plan->is_lop = (bool) ($request->is_lop ?? $plan->is_lop);
         $plan->is_lop = (bool) ($request->is_lop ?? $plan->is_lop);
         if ($plan->is_lop) {
-            $plan->project_id = $request->project_id; // Ambil project_id yang sudah ada
-            $plan->project_name = null; // Tidak perlu project_name
+            $plan->project_id = $request->project_id;
+            $plan->project_name = null;
         } else {
-            $plan->project_id = null; // Tidak ada project_id
-            $plan->project_name = $request->project_name; // Ambil project_name dari input
+            $plan->project_id = null;
+            $plan->project_name = $request->project_name;
         }
 
         $plan->judul = $request->judul;
-        $plan->nama_barang = $request->nama_barang;
-        $plan->jenis_barang_id = $jenis_barang->id;
-        $plan->tipe_barang_id = $tipe_barang->id;
-        $plan->jumlah_barang = $request->jumlah_barang;
         $plan->no_prpo = $request->no_prpo ?? $plan->no_prpo;
-        if ($request->hasFile('file_prpo'))
+        if ($request->hasFile('file_prpo')) {
             $plan->file_prpo = Storage::disk('public')->put('plan', $request->file_prpo);
+        }
         $plan->save();
+        
+        // Menghapus semua items yang terkait dengan Plan sebelum update
+        $plan->items()->delete();
+        // Melakukan iterasi pada setiap item dari request untuk membuat ulang PlanItem
+        foreach ($request->items as $it) {
+            $tipe = ItemType::where('uuid', $it['tipe_barang_id'])->first();
+            $jenis = ItemVariety::where('uuid', $it['jenis_barang_id'])->first();
+            if (!$tipe || !$jenis) {
+                return response()->json(['message' => 'Tipe atau jenis barang tidak ditemukan'], 404);
+            }
+            // Membuat ulang PlanItem
+            PlanItem::create([
+                'plan_id' => $plan->id,
+                'tipe_barang_id' => $tipe->id,
+                'jenis_barang_id' => $jenis->id,
+                'nama_barang' => $it['nama_barang'],
+                'jumlah_barang' => $it['jumlah_barang'],
+            ]);
+        }
 
-        // sync mitra
         $plan->companies()->sync($companies->pluck('id')->toArray());
 
-        return response()->json(['data' => $plan->load('companies'), 'message' => 'Success update data plan'], 200);
+        return response()->json(['data' => $plan->load('companies','items.item_type','items.item_variety'), 'message' => 'Success update data plan'], 200);
     }
 
     //Delete data
@@ -178,6 +196,34 @@ class PlanController extends Controller
 
         $model->delete();
         return response()->json(['message' => 'Success delete data plan'], 200);
+    }
+
+    //Softdelete Get Garbage
+    public function getGarbage()
+    {
+        $plans = Plan::onlyTrashed()->with(['items.item_type', 'items.item_variety', 'companies'])->get()->map(function ($plan) {
+            return [
+                "uuid" => $plan->uuid,
+                "project_id" => $plan->project_id,
+                "project_name" => $plan->project_name,
+                "judul" => $plan->judul,
+                "is_lop" => (bool)$plan->is_lop,
+                "file_prpo" => $plan->file_prpo,
+                "no_prpo" => $plan->no_prpo,
+                // Mapping items pada Plan yang sudah dihapus
+                'items' => $plan->items->map(fn($it)=> [
+                    'tipe_barang_id' => optional($it->item_type)->uuid,
+                    'jenis_barang_id' => optional($it->item_variety)->uuid,
+                    'nama_barang' => $it->nama_barang,
+                    'jumlah_barang' => $it->jumlah_barang,
+                ]),
+                // Mapping mitra pada Plan yang sudah dihapus
+                'mitra' => $plan->companies->map(fn($c)=> ['uuid'=>$c->uuid, 'name'=>$c->name]),
+                'created_at' => $plan->created_at,
+            ];
+        });
+
+        return response()->json(['data' => $plans, 'message' => 'Success get garbage plans'], 200); // Added return statement
     }
 
     //Restore data softdelete
