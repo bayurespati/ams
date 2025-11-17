@@ -25,12 +25,16 @@ class StorePlanRequest extends FormRequest
         return [
             'judul' => 'required|unique:plan,judul',
             'nama_barang' => 'required',
-            'project_id' => 'required',
-            'jenis_barang_id' => 'required',
-            'tipe_barang_id' => 'required',
-            'jumlah_barang' => 'required',
-            'no_prpo' => 'required',
-            'is_lop' => 'required',
+            'is_lop' => 'required|boolean',
+            'project_id' => 'required_if:is_lop,true,1|nullable',  
+            'project_name' => 'required_if:is_lop,false,0',  
+            'jenis_barang_id' => 'required|exists:item_variety,uuid',
+            'tipe_barang_id' => 'required|exists:item_type,uuid',
+            'jumlah_barang' => 'required|integer',
+            'no_prpo' => 'nullable',
+            'company_ids' => 'required|array|min:1',
+            'company_ids.*' => 'required|string|exists:companies,uuid',
+            'file_prpo' => 'nullable|file',
         ];
     }
 }

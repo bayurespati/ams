@@ -14,13 +14,14 @@ return new class extends Migration
         Schema::create('plan', function (Blueprint $table) {
             $table->id();
             $table->string('uuid');
-            $table->bigInteger('project_id');
+            $table->bigInteger('project_id')->nullable();
             $table->string('judul');
             $table->bigInteger('jenis_barang_id');
             $table->bigInteger('tipe_barang_id');
             $table->string('nama_barang', 100);
             $table->integer('jumlah_barang');
-            $table->boolean('is_lop');
+            $table->boolean('is_lop')->default(true);
+            $table->string('project_name')->nullable();
             $table->string('file_prpo')->nullable();
             $table->string('no_prpo')->nullable();
             $table->timestamps();

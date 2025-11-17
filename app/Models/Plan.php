@@ -8,11 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Plan extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'plan';
-
     protected $guarded = [];
 
     protected $hidden = [
@@ -34,5 +32,11 @@ class Plan extends Model
     public function po()
     {
         return $this->hasMany(PO::class, 'plan_id', 'id');
+    }
+
+    // many-to-many dengan companies (mitra)
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class, 'company_plan', 'plan_id', 'company_id')->withTimestamps();
     }
 }
