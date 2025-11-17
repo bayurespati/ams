@@ -102,9 +102,10 @@ class DoInController extends Controller
             $do_in->status_keterangan = $request->status_keterangan;
             $do_in->save();
             return response()->json(['data' => $do_in, 'message' => 'Success reject data do in'], 200);
+        } else {
+            $do_in->status = "approve";
         }
 
-        $do_in->status = "approve";
         $do_in->keterangan_status = $request->keterangan_status;
         $do_in->save();
         $result = $this->addAsset($do_in);
