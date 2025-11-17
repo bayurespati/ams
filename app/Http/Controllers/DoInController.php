@@ -99,7 +99,7 @@ class DoInController extends Controller
             return response()->json(['data' => $do_in, 'message' => 'Data not found'], 404);
         if ($request->status == "rejected") {
             $do_in->status = "rejected";
-            $do_in->status_keterangan = $request->status_keterangan;
+            $do_in->keterangan_status = $request->keterangan_status;
             $do_in->save();
             return response()->json(['data' => $do_in, 'message' => 'Success reject data do in'], 200);
         } else {
