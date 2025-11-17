@@ -25,7 +25,8 @@ class DoInResource extends JsonResource
             "file_evidence" => $this->file_evidence,
             "file_foto_terima" => $this->file_foto_terima,
             'po_id' => $this->po?->uuid,
-            'po' => $this->po
+            'po' => $this->po,
+            'status' => $this->status
         ];
     }
 }
