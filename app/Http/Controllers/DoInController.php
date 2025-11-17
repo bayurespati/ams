@@ -6,6 +6,7 @@ use App\Http\Requests\StoreDoInRequest;
 use App\Http\Requests\UpdateDoInRequest;
 use App\Http\Resources\DoInResource;
 use App\Imports\AddItemDoInImport;
+use App\Models\Asset;
 use App\Models\DoIn;
 use App\Models\PO;
 use App\Models\Company;
@@ -56,6 +57,7 @@ class DoInController extends Controller
         $do_in->tanggal_masuk = $request->tanggal_masuk;
         $do_in->no_gr = $request->no_gr;
         $do_in->penerima = $request->penerima;
+        $do_in->status = 'progress';
         $do_in->file_evidence = Storage::disk('public')->put('do_in', $request->file_evidence);
         $do_in->file_foto_terima = Storage::disk('public')->put('do_in', $request->file_foto_terima);
         $do_in->save();
@@ -90,18 +92,43 @@ class DoInController extends Controller
         return response()->json(['data' => $data, 'message' => 'Success update data do in'], 200);
     }
 
-    public function approve(Request $request)
+    public function process(Request $request)
     {
-        $do_in = DoIn::where('uuid', $request->id)->first();
+        $do_in = DoIn::where('uuid', $request->id)->with(['item_do_in'])->first();
         if (!$do_in)
             return response()->json(['data' => $do_in, 'message' => 'Data not found'], 404);
-        $item_do_in = ItemDoIn::where('do_id_in', $do_in->id)->where('is_approve', 0)->first();
-        if ($item_do_in)
-            return response()->json(['data' => $do_in, 'message' => 'Item verification not complate'], 404);
+        if ($request->status == "reject") {
+            $do_in->status = "reject";
+            $do_in->status_keterangan = $request->status_keterangan;
+            $do_in->save();
+            return response()->json(['data' => $do_in, 'message' => 'Success reject data do in'], 200);
+        }
 
-        $do_in->is_approve = true;
+        $do_in->status = "approve";
+        $do_in->keterangan_status = $request->keterangan_status;
         $do_in->save();
+        $result = $this->addAsset($do_in);
         return response()->json(['data' => $do_in, 'message' => 'Success approve data do in'], 200);
+    }
+
+    private function addAsset($do_in)
+    {
+        // dd($do_in->item_do_in);
+        // $existing_labels_count = Asset::where('id_asset', $request->id_asset)->count();
+        // $start_index = $existing_labels_count + 1;
+        // $plan = Plan::where('uuid', $request->id_asset)->first();
+        foreach ($do_in->item_do_in as $item) {
+            $asset = new Asset();
+            $asset->uuid = Str::uuid();
+            $asset->nama_barang = $item->nama;
+            $asset->sn = $item->sn;
+            $asset->jumlah = $item->jumlah;
+            $asset->owner_id = $item->owner_id;
+            $asset->do_in_id = $do_in->id;
+            // $asset->label = $this->generateLabel($request->id_asset, $asset->quantity, $asset_label->internal_order, $start_index);
+            $asset->label = "label";
+            $asset->save();
+        }
     }
 
     //Delete data

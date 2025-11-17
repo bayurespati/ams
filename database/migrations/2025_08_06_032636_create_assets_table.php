@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nama_barang');
             $table->string('sn')->nullable();
             $table->integer('jumlah');
-            $table->string('owner_id');
+            $table->bingInteger('owner_id');
             $table->bigInteger('do_in_id');
             $table->string('barcode')->nullable();
             $table->string('condition')->nullable();

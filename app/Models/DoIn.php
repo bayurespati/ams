@@ -26,4 +26,9 @@ class DoIn extends Model
     {
         return $this->belongsTo(PO::class, 'po_id', 'id')->withTrashed();
     }
+
+    public function item_do_in()
+    {
+        return $this->hasMany(ItemDoIn::class, 'do_in_id', 'id');
+    }
 }
