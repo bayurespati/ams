@@ -16,6 +16,7 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\POController;
 use App\Http\Controllers\StarController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\RakController;
 use App\Models\Asset;
 use App\Models\ItemDoIn;
 use App\Models\Warehouse;
@@ -161,3 +162,15 @@ Route::group(['prefix' => 'asset-label',], function () {
     Route::PATCH('/restore', [AssetLabelController::class, 'restore']);
     Route::DELETE('', [AssetLabelController::class, 'destroy']);
 });
+
+// Route list Master data Rak
+Route::group(['prefix' => 'rak'], function () {
+    Route::GET('/detail', [RakController::class, 'getById']);
+    Route::GET('/garbage', [RakController::class, 'getGarbage']);
+    Route::GET('', [RakController::class, 'getAll']);
+    Route::POST('', [RakController::class, 'store']);
+    Route::PATCH('', [RakController::class, 'update']);
+    Route::PATCH('/restore', [RakController::class, 'restore']);
+    Route::DELETE('', [RakController::class, 'destroy']);
+});
+
