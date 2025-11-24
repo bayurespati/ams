@@ -15,6 +15,7 @@ use App\Http\Controllers\ItemVarietyController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\POController;
 use App\Http\Controllers\StarController;
+use App\Http\Controllers\VmsController;
 use App\Http\Controllers\WarehouseController;
 use App\Models\Asset;
 use App\Models\ItemDoIn;
@@ -27,6 +28,10 @@ Route::group(['prefix' => 'dashboard',], function () {
 
 Route::group(['prefix' => 'star',], function () {
     Route::GET('/get-projects', [StarController::class, 'getProject']);
+});
+
+Route::group(['prefix' => 'vms',], function () {
+    Route::GET('/get-po', [VmsController::class, 'getPo']);
 });
 
 Route::group(['prefix' => 'plans',], function () {
