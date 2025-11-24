@@ -18,7 +18,8 @@ class Plan extends Model
         'updated_at',
         'deleted_at'
     ];
-
+    
+    // relasi ke ItemType dan ItemVariety melalui PlanItem
     public function item_type()
     {
         return $this->belongsTo(ItemType::class, 'tipe_barang_id', 'id');
@@ -38,5 +39,11 @@ class Plan extends Model
     public function companies()
     {
         return $this->belongsToMany(Company::class, 'company_plan', 'plan_id', 'company_id')->withTimestamps();
+    }
+
+    // Relasi (belongsTo) ke ItemType melalui kolom 'tipe_barang_id' pada model yang memiliki relasi
+    public function items()
+    {
+        return $this->hasMany(PlanItem::class, 'plan_id', 'id');
     }
 }
