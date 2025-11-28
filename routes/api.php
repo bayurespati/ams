@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AssetLabelController;
 use App\Http\Controllers\AssetRecapController;
 use App\Http\Controllers\BrandController;
@@ -117,6 +118,16 @@ Route::group(['prefix' => 'brands',], function () {
     Route::DELETE('', [BrandController::class, 'destroy']);
 });
 
+Route::group(['prefix' => 'assets',], function () {
+    Route::GET('/detail', [AssetController::class, 'getById']);
+    Route::GET('/garbage', [AssetController::class, 'getGarbage']);
+    Route::GET('', [AssetController::class, 'getAll']);
+    Route::POST('', [AssetController::class, 'store']);
+    Route::PATCH('', [AssetController::class, 'update']);
+    Route::PATCH('/restore', [AssetController::class, 'restore']);
+    Route::DELETE('', [AssetController::class, 'destroy']);
+});
+
 Route::group(['prefix' => 'item_types',], function () {
     Route::GET('/detail', [ItemTypeController::class, 'getById']);
     Route::GET('/garbage', [ItemTypeController::class, 'getGarbage']);
@@ -178,4 +189,3 @@ Route::group(['prefix' => 'rak'], function () {
     Route::PATCH('/restore', [RakController::class, 'restore']);
     Route::DELETE('', [RakController::class, 'destroy']);
 });
-

@@ -4,63 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAssetRequest;
 use App\Http\Requests\UpdateAssetRequest;
+use App\Http\Resources\AssetResource;
+use Illuminate\Http\Request;
 use App\Models\Asset;
 
 class AssetController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function getById(Request $request)
     {
-        //
+        //Test git branch
+        $asset = Asset::where('uuid', $request->id)->with(['do_in', 'owner'])->first();
+        if (!$asset) {
+            return response()->json(['data' => $asset, 'message' => 'Data not found'], 404);
+        }
+        $data = new AssetResource($asset);
+        return response()->json(['data' => $data, 'message' => 'Success get data do in'], 200);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    //Get All
+    public function getAll()
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreAssetRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Asset $asset)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Asset $asset)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateAssetRequest $request, Asset $asset)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Asset $asset)
-    {
-        //
+        $asset = Asset::with(['do_in', 'owner'])->get();
+        $data = AssetResource::collection($asset);
+        return response()->json(['data' => $data, 'message' => 'Success get data asset'], 200);
     }
 }
