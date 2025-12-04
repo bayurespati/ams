@@ -26,10 +26,11 @@ class ItemDoInController extends Controller
     }
 
     //Get All
-    public function getAll()
+    public function getAll(Request $request)
     {
-        $do_in = ItemDoIn::with('do_in')->get();
-        $data = ItemDoInResource::collection($do_in);
+        $do_in = DoIn::where('uuid', $request->do_in_id)->first();
+        $item_do_in = ItemDoIn::where('do_in_id', $do_in->id)->with('do_in')->get();
+        $data = ItemDoInResource::collection($item_do_in);
         return response()->json(['data' => $data, 'message' => 'Success get data item do in'], 200);
     }
 
