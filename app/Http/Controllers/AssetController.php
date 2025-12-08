@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateAssetRequest;
 use App\Http\Resources\AssetResource;
 use Illuminate\Http\Request;
 use App\Models\Asset;
+use App\Models\Rak;
 
 class AssetController extends Controller
 {
@@ -31,7 +32,7 @@ class AssetController extends Controller
     public function update(Request $request)
     {
         $asset = Asset::where('uuid', $request->id)->first();
-        $rak = Company::where('uuid', $request->rack_id)->first();
+        $rak = Rak::where('uuid', $request->rack_id)->first();
         if (!$asset)
             return response()->json(['data' => $asset, 'message' => 'Data not found'], 404);
         if (!$rak)
