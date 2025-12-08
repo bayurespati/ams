@@ -27,4 +27,19 @@ class AssetController extends Controller
         $data = AssetResource::collection($asset);
         return response()->json(['data' => $data, 'message' => 'Success get data asset'], 200);
     }
+
+    public function update(StoreAssetRequest $request)
+    {
+        $asset = Asset::where('uuid', $request->id)->first();
+        $rak = Company::where('uuid', $request->rack_id)->first();
+        if (!$asset)
+            return response()->json(['data' => $asset, 'message' => 'Data not found'], 404);
+        if (!$rak)
+            return response()->json(['message' => 'Data rack not found'], 404);
+        $asset->rak_id = $rak->id;
+        $asset->save();
+        $asset->load('do_in');
+        $data = new AssetResource($asset);
+        return response()->json(['data' => $data, 'message' => 'Success update data asset'], 200);
+    }
 }
