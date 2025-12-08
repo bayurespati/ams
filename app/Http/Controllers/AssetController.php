@@ -28,7 +28,7 @@ class AssetController extends Controller
         return response()->json(['data' => $data, 'message' => 'Success get data asset'], 200);
     }
 
-    public function update(StoreAssetRequest $request)
+    public function update(Request $request)
     {
         $asset = Asset::where('uuid', $request->id)->first();
         $rak = Company::where('uuid', $request->rack_id)->first();
