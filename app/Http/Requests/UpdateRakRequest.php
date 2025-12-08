@@ -17,6 +17,8 @@ class UpdateRakRequest extends FormRequest
             'kode_rak' => 'required|string|unique:rak,kode_rak,' . $model->id,
             'nama_rak' => 'required|string',
             'lokasi_rak' => 'required|string',
+            'baris_rak' => 'required|string',
+            'kolom_rak' => 'required|string',
             'kapasitas_rak' => 'required|integer|min:1',
             'status_rak' => 'required|in:active,inactive,maintenance',
             'keterangan' => 'nullable|string',

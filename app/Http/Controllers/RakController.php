@@ -28,6 +28,8 @@ class RakController extends Controller
                 'uuid' => $rak->uuid,
                 'kode_rak' => $rak->kode_rak,
                 'nama_rak' => $rak->nama_rak,
+                'baris_rak' => $rak->baris_rak,
+                'kolom_rak' => $rak->kolom_rak,
                 'lokasi_rak' => $rak->lokasi_rak,
                 'kapasitas_rak' => $rak->kapasitas_rak,
                 'status_rak' => $rak->status_rak,
@@ -53,6 +55,8 @@ class RakController extends Controller
         $rak->uuid = (string) Str::uuid();
         $rak->kode_rak = $request->kode_rak;
         $rak->nama_rak = $request->nama_rak;
+        $rak->baris_rak = $request->baris_rak;
+        $rak->kolom_rak = $request->kolom_rak;
         $rak->lokasi_rak = $request->lokasi_rak;
         $rak->kapasitas_rak = $request->kapasitas_rak;
         $rak->status_rak = $request->status_rak;
@@ -75,6 +79,8 @@ class RakController extends Controller
 
         $rak->kode_rak = $request->kode_rak;
         $rak->nama_rak = $request->nama_rak;
+        $rak->baris_rak = $request->baris_rak;
+        $rak->kolom_rak = $request->kolom_rak;
         $rak->lokasi_rak = $request->lokasi_rak;
         $rak->kapasitas_rak = $request->kapasitas_rak;
         $rak->status_rak = $request->status_rak;

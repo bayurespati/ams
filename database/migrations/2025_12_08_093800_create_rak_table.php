@@ -16,6 +16,8 @@ return new class extends Migration
             $table->uuid('uuid')->unique();
             $table->string('kode_rak')->unique();
             $table->string('nama_rak');
+            $table->string('baris_rak');
+            $table->string('kolom_rak');
             $table->string('lokasi_rak');
             $table->integer('kapasitas_rak');
             $table->enum('status_rak', ['active', 'inactive', 'maintenance'])->default('active');
