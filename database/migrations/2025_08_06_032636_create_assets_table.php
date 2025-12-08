@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('barcode')->nullable();
             $table->string('condition')->nullable();
             $table->string('current_location')->nullable();
+            $table->bigInteger('rak_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -29,4 +29,9 @@ class Asset extends Model
     {
         return $this->belongsTo(DoIn::class, 'do_in_id', 'id')->withTrashed();
     }
+
+    public function rak()
+    {
+        return $this->belongsTo(Rak::class, 'rak_id', 'id')->withTrashed();
+    }
 }

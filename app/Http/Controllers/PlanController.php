@@ -19,7 +19,7 @@ class PlanController extends Controller
 {
     // Get By id
     public function getById(Request $request)
-    {      
+    {
         $plan = Plan::with(['items.item_type', 'items.item_variety', 'companies'])->where('uuid', $request->id)->first();
         if (!$plan)
             return response()->json(['data' => $plan, 'message' => 'Data not found'], 404);
@@ -42,7 +42,9 @@ class PlanController extends Controller
                 ];
             }),
             // Mapping data mitra pada Plan
-            'mitra' => $plan->companies->map(function ($c) { return ['uuid'=>$c->uuid,'name'=>$c->name]; }),
+            'mitra' => $plan->companies->map(function ($c) {
+                return ['uuid' => $c->uuid, 'name' => $c->name];
+            }),
             'created_at' => $plan->created_at,
         ];
 
@@ -50,7 +52,7 @@ class PlanController extends Controller
     }
 
     // Get All
-     public function getAll()
+    public function getAll()
     {
         $plans = Plan::with(['items.item_type', 'items.item_variety', 'companies'])->get()->map(function ($plan) {
             return [
@@ -62,14 +64,14 @@ class PlanController extends Controller
                 "file_prpo" => $plan->file_prpo,
                 "no_prpo" => $plan->no_prpo,
                 // Mapping items pada setiap Plan
-                'items' => $plan->items->map(fn($it)=> [
+                'items' => $plan->items->map(fn($it) => [
                     'tipe_barang_id' => optional($it->item_type)->uuid,
                     'jenis_barang_id' => optional($it->item_variety)->uuid,
                     'nama_barang' => $it->nama_barang,
                     'jumlah_barang' => $it->jumlah_barang,
                 ]),
                 // Mapping mitra pada setiap Plan
-                'mitra' => $plan->companies->map(fn($c)=> ['uuid'=>$c->uuid, 'name'=>$c->name]),
+                'mitra' => $plan->companies->map(fn($c) => ['uuid' => $c->uuid, 'name' => $c->name]),
                 'created_at' => $plan->created_at,
             ];
         });
@@ -129,7 +131,7 @@ class PlanController extends Controller
         $plan->companies()->attach($companies->pluck('id')->toArray());
 
         return response()->json([
-            'data' => $plan->load(['companies','items.item_type','items.item_variety']),
+            'data' => $plan->load(['companies', 'items.item_type', 'items.item_variety']),
             'message' => 'Success store data plan'
         ], 200);
     }
@@ -138,7 +140,7 @@ class PlanController extends Controller
     public function update(Request $request)
     {
         $plan = Plan::where('uuid', $request->id)->first();
-        if (!$plan) return response()->json(['data'=>$plan,'message'=>'Data not found'], 404);
+        if (!$plan) return response()->json(['data' => $plan, 'message' => 'Data not found'], 404);
 
         $request->validate((new UpdatePlanRequest())->rules($plan));
 
@@ -162,7 +164,7 @@ class PlanController extends Controller
             $plan->file_prpo = Storage::disk('public')->put('plan', $request->file_prpo);
         }
         $plan->save();
-        
+
         // Menghapus semua items yang terkait dengan Plan sebelum update
         $plan->items()->delete();
         // Melakukan iterasi pada setiap item dari request untuk membuat ulang PlanItem
@@ -184,7 +186,7 @@ class PlanController extends Controller
 
         $plan->companies()->sync($companies->pluck('id')->toArray());
 
-        return response()->json(['data' => $plan->load('companies','items.item_type','items.item_variety'), 'message' => 'Success update data plan'], 200);
+        return response()->json(['data' => $plan->load('companies', 'items.item_type', 'items.item_variety'), 'message' => 'Success update data plan'], 200);
     }
 
     //Delete data
@@ -211,14 +213,14 @@ class PlanController extends Controller
                 "file_prpo" => $plan->file_prpo,
                 "no_prpo" => $plan->no_prpo,
                 // Mapping items pada Plan yang sudah dihapus
-                'items' => $plan->items->map(fn($it)=> [
+                'items' => $plan->items->map(fn($it) => [
                     'tipe_barang_id' => optional($it->item_type)->uuid,
                     'jenis_barang_id' => optional($it->item_variety)->uuid,
                     'nama_barang' => $it->nama_barang,
                     'jumlah_barang' => $it->jumlah_barang,
                 ]),
                 // Mapping mitra pada Plan yang sudah dihapus
-                'mitra' => $plan->companies->map(fn($c)=> ['uuid'=>$c->uuid, 'name'=>$c->name]),
+                'mitra' => $plan->companies->map(fn($c) => ['uuid' => $c->uuid, 'name' => $c->name]),
                 'created_at' => $plan->created_at,
             ];
         });

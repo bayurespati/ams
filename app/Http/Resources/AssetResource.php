@@ -17,7 +17,9 @@ class AssetResource extends JsonResource
             "jumlah" => $this->jumlah,
             "owner_id" => $this->owner?->uuid,
             "owner" => $this->owner,
-            'do_in' => $this->do_in,
+            "do_in" => $this->do_in,
+            "rak" => $this->rak ? $this->rak : null,
+            "rak_id" => $this->rak?->uuid,
         ];
     }
 }
