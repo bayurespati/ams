@@ -10,6 +10,7 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DismantelController;
 use App\Http\Controllers\DoInController;
+use App\Http\Controllers\DoOutController;
 use App\Http\Controllers\ItemDoInController;
 use App\Http\Controllers\ItemTypeController;
 use App\Http\Controllers\ItemVarietyController;
@@ -65,6 +66,17 @@ Route::group(['prefix' => 'do-in',], function () {
     Route::PATCH('', [DoInController::class, 'update']);
     Route::PATCH('/restore', [DoInController::class, 'restore']);
     Route::DELETE('', [DoInController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'do-out',], function () {
+    Route::GET('/detail', [DoOutController::class, 'getById']);
+    Route::GET('/garbage', [DoOutController::class, 'getGarbage']);
+    Route::GET('', [DoOutController::class, 'getAll']);
+    Route::POST('', [DoOutController::class, 'store']);
+    Route::POST('/process', [DoOutController::class, 'process']);
+    Route::PATCH('', [DoOutController::class, 'update']);
+    Route::PATCH('/restore', [DoOutController::class, 'restore']);
+    Route::DELETE('', [DoOutController::class, 'destroy']);
 });
 
 Route::group(['prefix' => 'item-do-in',], function () {

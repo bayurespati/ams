@@ -1,4 +1,3 @@
-// database/migrations/2025_11_04_000002_create_company_plan_table.php
 <?php
 
 use Illuminate\Database\Migrations\Migration;

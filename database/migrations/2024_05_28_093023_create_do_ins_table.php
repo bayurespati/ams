@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('file_evidence', 100);
             $table->string('file_foto_terima', 100);
             $table->text('keterangan');
-            $table->text('status')->default(0);
+            $table->string('status')->default(0);
             $table->text('status_keterangan')->nullable();
             $table->timestamps();
             $table->softDeletes();
