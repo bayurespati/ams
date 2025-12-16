@@ -21,4 +21,11 @@ class Brand extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    // many-to-many dengan plans
+    public function plans() {
+        return $this->belongsToMany(Plan::class,'plan_brand','brand_id','plan_id')->withTimestamps();
+    }
 }
+
+
