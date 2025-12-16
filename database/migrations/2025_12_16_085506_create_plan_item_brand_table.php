@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('plan_item', function (Blueprint $table) {
+       Schema::create('plan_item_brand', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('plan_id')->constrained('plan')->onDelete('cascade');
-            $table->bigInteger('tipe_barang_id');    
-            $table->bigInteger('jenis_barang_id');   
-            $table->string('nama_barang', 100);
-            $table->integer('jumlah_barang');
+            $table->foreignId('plan_item_id')->constrained('plan_item')->onDelete('cascade');
+            $table->foreignId('brand_id')->constrained('brands')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('plan_item');
+        Schema::dropIfExists('plan_item_brand');
     }
 };

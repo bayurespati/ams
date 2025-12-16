@@ -22,9 +22,9 @@ class Brand extends Model
         'deleted_at'
     ];
 
-    // many-to-many dengan plans
-    public function plans() {
-        return $this->belongsToMany(Plan::class,'plan_brand','brand_id','plan_id')->withTimestamps();
+    public function plan_items()
+    {
+        return $this->belongsToMany(PlanItem::class, 'plan_item_brand');
     }
 }
 

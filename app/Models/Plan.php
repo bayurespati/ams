@@ -36,16 +36,17 @@ class Plan extends Model
 
     public function companies()
     {
-        return $this->belongsToMany(Company::class, 'company_plan', 'plan_id', 'company_id')->withTimestamps();
+        return $this->belongsToMany(
+            Company::class,
+            'company_plan',
+            'plan_id',
+            'company_id'
+        )->withTimestamps();
     }
 
     public function items()
     {
-        return $this->hasMany(PlanItem::class, 'plan_id', 'id');
+        return $this->hasMany(PlanItem::class, 'plan_id');
     }
    
-    public function brands()
-    {
-        return $this->belongsToMany(Brand::class,'plan_brand','plan_id','brand_id')->withTimestamps();
-    }
 }
