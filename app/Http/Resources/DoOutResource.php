@@ -18,7 +18,7 @@ class DoOutResource extends JsonResource
             "uuid" => $this->uuid,
             "no_do" => $this->no_do,
             "tanggal_do" => $this->tanggal_do,
-            "pengirim" => $this->pangirim,
+            "pengirim" => $this->pengirim,
             "alamat_pengirim" => $this->alamat_pengirim,
             "pic_pengirim" => $this->pic_pengirim,
             "telpon_pengirim" => $this->telpon_pengirim,

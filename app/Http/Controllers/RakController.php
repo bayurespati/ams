@@ -61,7 +61,6 @@ class RakController extends Controller
         $rak->kapasitas_rak = $request->kapasitas_rak;
         $rak->status_rak = $request->status_rak;
         $rak->keterangan = $request->keterangan ?? null;
-
         $rak->save();
 
         return response()->json(['data' => $rak, 'message' => 'Success create rak'], 201);
@@ -85,7 +84,6 @@ class RakController extends Controller
         $rak->kapasitas_rak = $request->kapasitas_rak;
         $rak->status_rak = $request->status_rak;
         $rak->keterangan = $request->keterangan ?? $rak->keterangan;
-
         $rak->save();
 
         return response()->json(['data' => $rak, 'message' => 'Success update rak'], 200);
