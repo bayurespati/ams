@@ -21,4 +21,11 @@ class Brand extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    public function plan_items()
+    {
+        return $this->belongsToMany(PlanItem::class, 'plan_item_brand');
+    }
 }
+
+

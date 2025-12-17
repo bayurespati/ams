@@ -24,4 +24,9 @@ class Company extends Model
     {
         return $this->belongsToMany(Plan::class, 'company_plan', 'company_id', 'plan_id')->withTimestamps();
     }
+
+        public function plan_items()
+    {
+        return $this->hasMany(PlanItem::class);
+    }
 }
