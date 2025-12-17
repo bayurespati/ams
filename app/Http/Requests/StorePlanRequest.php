@@ -27,8 +27,6 @@ class StorePlanRequest extends FormRequest
             'items.*.brand_ids' => 'required|array|min:1',
             'items.*.brand_ids.*' => 'required|string|exists:brands,uuid',
             'no_prpo' => 'nullable',
-            'company_ids' => 'required|array|min:1',
-            'company_ids.*' => 'required|string|exists:companies,uuid',
             'file_prpo' => 'nullable|file',
         ];
     }
