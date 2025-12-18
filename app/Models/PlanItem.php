@@ -24,18 +24,14 @@ class PlanItem extends Model
         return $this->belongsTo(ItemVariety::class, 'jenis_barang_id');
     }
 
-    public function company()
+    public function brand()
     {
-        return $this->belongsTo(Company::class, 'company_id');
+        return $this->belongsTo(Brand::class);
     }
 
-    public function brands()
+    public function company()
     {
-        return $this->belongsToMany(
-            Brand::class,
-            'plan_item_brand',
-            'plan_item_id',
-            'brand_id'
-        );
+        return $this->belongsTo(Company::class);
     }
 }
+
