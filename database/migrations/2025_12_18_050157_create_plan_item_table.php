@@ -11,9 +11,10 @@ return new class extends Migration
         Schema::create('plan_item', function (Blueprint $table) {
             $table->id();
             $table->foreignId('plan_id')->constrained('plan')->onDelete('cascade');
+            $table->foreignId('tipe_barang_id')->constrained('item_type');
+            $table->foreignId('jenis_barang_id')->constrained('item_variety');
+            $table->foreignId('brand_id')->constrained('brands');
             $table->foreignId('company_id')->constrained('companies');
-            $table->bigInteger('tipe_barang_id');    
-            $table->bigInteger('jenis_barang_id');   
             $table->string('nama_barang', 100);
             $table->integer('jumlah_barang');
             $table->timestamps();

@@ -18,6 +18,6 @@ class Plan extends Model
 
     public function items()
     {
-        return $this->hasMany(PlanItem::class, 'plan_id');
+        return $this->hasMany(PlanItem::class, 'plan_id', 'id');
     }
 }

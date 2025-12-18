@@ -27,8 +27,8 @@ class PlanController extends Controller
         $plan = Plan::with([
             'items.item_type',
             'items.item_variety',
-            'items.company',
-            'items.brands'
+            'items.brand',
+            'items.company'
         ])->where('uuid', $request->id)->first();
 
         if (!$plan) {
@@ -44,23 +44,20 @@ class PlanController extends Controller
             'file_prpo' => $plan->file_prpo,
             'no_prpo' => $plan->no_prpo,
             'items' => $plan->items->map(fn ($it) => [
-                'tipe_barang_id' => optional($it->item_type)->uuid,
-                'jenis_barang_id' => optional($it->item_variety)->uuid,
+                'tipe_barang' => optional($it->item_type)->uuid,
+                'jenis_barang' => optional($it->item_variety)->uuid,
+                'brand' => optional($it->brand)->name,
+                'mitra' => optional($it->company)->name,
                 'nama_barang' => $it->nama_barang,
                 'jumlah_barang' => $it->jumlah_barang,
-                'mitra' => [
-                    'uuid' => optional($it->company)->uuid,
-                    'name' => optional($it->company)->name,
-                ],
-                'brands' => $it->brands->map(fn ($b) => [
-                    'uuid' => $b->uuid,
-                    'name' => $b->name
-                ])
             ]),
             'created_at' => $plan->created_at
         ];
 
-        return response()->json(['data' => $data, 'message' => 'Success get data plan'], 200);
+        return response()->json([
+            'data' => $data,
+            'message' => 'Success get data plan'
+        ], 200);
     }
 
     /**
@@ -73,37 +70,30 @@ class PlanController extends Controller
         $plans = Plan::with([
             'items.item_type',
             'items.item_variety',
-            'items.company',
-            'items.brands'
+            'items.brand',
+            'items.company'
         ])->get()->map(fn ($plan) => [
             'uuid' => $plan->uuid,
-            'project_id' => $plan->project_id,
-            'project_name' => $plan->project_name,
             'judul' => $plan->judul,
             'is_lop' => (bool) $plan->is_lop,
-            'file_prpo' => $plan->file_prpo,
-            'no_prpo' => $plan->no_prpo,
             'items' => $plan->items->map(fn ($it) => [
                 'nama_barang' => $it->nama_barang,
                 'jumlah_barang' => $it->jumlah_barang,
-                'mitra' => [
-                    'uuid' => optional($it->company)->uuid,
-                    'name' => optional($it->company)->name,
-                ],
-                'brands' => $it->brands->map(fn ($b) => [
-                    'uuid' => $b->uuid,
-                    'name' => $b->name
-                ])
+                'brand' => optional($it->brand)->name,
+                'mitra' => optional($it->company)->name,
             ]),
             'created_at' => $plan->created_at
         ]);
 
-        return response()->json(['data' => $plans, 'message' => 'Success get data plans'], 200);
+        return response()->json([
+            'data' => $plans,
+            'message' => 'Success get data plans'
+        ], 200);
     }
 
     /**
      * =========================
-     * STORE DATA
+     * STORE
      * =========================
      */
     public function store(StorePlanRequest $request)
@@ -125,27 +115,32 @@ class PlanController extends Controller
 
             foreach ($request->items as $it) {
 
-                $company = Company::where('uuid', $it['company_id'])->firstOrFail();
-                $tipe = ItemType::where('uuid', $it['tipe_barang_id'])->firstOrFail();
-                $jenis = ItemVariety::where('uuid', $it['jenis_barang_id'])->firstOrFail();
+                $tipe = ItemType::where('uuid', $it['tipe_barang_id'])->first();
+                $jenis = ItemVariety::where('uuid', $it['jenis_barang_id'])->first();
+                $brand = Brand::where('uuid', $it['brand_id'])->first();
+                $company = Company::where('uuid', $it['company_id'])->first();
 
-                $planItem = PlanItem::create([
+                if (!$tipe || !$jenis || !$brand || !$company) {
+                    return response()->json([
+                        'message' => 'Referensi item tidak valid'
+                    ], 404);
+                }
+
+                PlanItem::create([
                     'plan_id' => $plan->id,
-                    'company_id' => $company->id,
                     'tipe_barang_id' => $tipe->id,
                     'jenis_barang_id' => $jenis->id,
+                    'brand_id' => $brand->id,
+                    'company_id' => $company->id,
                     'nama_barang' => $it['nama_barang'],
                     'jumlah_barang' => $it['jumlah_barang'],
                 ]);
-
-                $brands = Brand::whereIn('uuid', $it['brand_ids'])->pluck('id');
-                $planItem->brands()->attach($brands);
             }
 
             DB::commit();
 
             return response()->json([
-                'data' => $plan->load('items.company', 'items.brands'),
+                'data' => $plan->load('items.brand', 'items.company'),
                 'message' => 'Success store data plan'
             ], 200);
 
@@ -160,7 +155,7 @@ class PlanController extends Controller
 
     /**
      * =========================
-     * UPDATE DATA
+     * UPDATE
      * =========================
      */
     public function update(UpdatePlanRequest $request)
@@ -186,32 +181,36 @@ class PlanController extends Controller
                 $plan->save();
             }
 
-            // reset items
             $plan->items()->delete();
 
             foreach ($request->items as $it) {
 
-                $company = Company::where('uuid', $it['company_id'])->firstOrFail();
-                $tipe = ItemType::where('uuid', $it['tipe_barang_id'])->firstOrFail();
-                $jenis = ItemVariety::where('uuid', $it['jenis_barang_id'])->firstOrFail();
+                $tipe = ItemType::where('uuid', $it['tipe_barang_id'])->first();
+                $jenis = ItemVariety::where('uuid', $it['jenis_barang_id'])->first();
+                $brand = Brand::where('uuid', $it['brand_id'])->first();
+                $company = Company::where('uuid', $it['company_id'])->first();
 
-                $planItem = PlanItem::create([
+                if (!$tipe || !$jenis || !$brand || !$company) {
+                    return response()->json([
+                        'message' => 'Referensi item tidak valid'
+                    ], 404);
+                }
+
+                PlanItem::create([
                     'plan_id' => $plan->id,
-                    'company_id' => $company->id,
                     'tipe_barang_id' => $tipe->id,
                     'jenis_barang_id' => $jenis->id,
+                    'brand_id' => $brand->id,
+                    'company_id' => $company->id,
                     'nama_barang' => $it['nama_barang'],
                     'jumlah_barang' => $it['jumlah_barang'],
                 ]);
-
-                $brands = Brand::whereIn('uuid', $it['brand_ids'])->pluck('id');
-                $planItem->brands()->attach($brands);
             }
 
             DB::commit();
 
             return response()->json([
-                'data' => $plan->load('items.company', 'items.brands'),
+                'data' => $plan->load('items.brand', 'items.company'),
                 'message' => 'Success update data plan'
             ], 200);
 
@@ -238,38 +237,5 @@ class PlanController extends Controller
 
         $plan->delete();
         return response()->json(['message' => 'Success delete data plan'], 200);
-    }
-
-    /**
-     * =========================
-     * GET GARBAGE
-     * =========================
-     */
-    public function getGarbage()
-    {
-        $plans = Plan::onlyTrashed()
-            ->with('items.company', 'items.brands')
-            ->get();
-
-        return response()->json([
-            'data' => $plans,
-            'message' => 'Success get garbage plans'
-        ], 200);
-    }
-
-    /**
-     * =========================
-     * RESTORE
-     * =========================
-     */
-    public function restore(Request $request)
-    {
-        $plan = Plan::withTrashed()->where('uuid', $request->id)->first();
-        if (!$plan) {
-            return response()->json(['message' => 'Data not found'], 404);
-        }
-
-        $plan->restore();
-        return response()->json(['message' => 'Success restore data plan'], 200);
     }
 }
